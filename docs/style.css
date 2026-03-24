@@ -1,0 +1,535 @@
+:root {
+  --bg: #f5f3eb;
+  --surface: #fffdf8;
+  --surface-strong: #efe7d7;
+  --ink: #1f2733;
+  --muted: #586271;
+  --line: rgba(31, 39, 51, 0.12);
+  --accent: #124170;
+  --accent-soft: #d6e4f3;
+  --accent-warm: #c96d33;
+  --shadow: 0 18px 40px rgba(24, 32, 44, 0.08);
+  --radius: 24px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(201, 109, 51, 0.12), transparent 28%),
+    linear-gradient(180deg, #fbf8f2 0%, var(--bg) 48%, #f0eee8 100%);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.wrap {
+  width: min(1160px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.site-header {
+  padding: 1.1rem 0 2.5rem;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.2rem;
+}
+
+.brand {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.topnav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.7rem;
+}
+
+.pill-link,
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0.7rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(255, 253, 248, 0.9);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.button {
+  padding-inline: 1.15rem;
+}
+
+.button:hover,
+.pill-link:hover {
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.button-primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.button-secondary {
+  background: transparent;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.85fr);
+  gap: 1.4rem;
+  align-items: stretch;
+}
+
+.hero-copy,
+.hero-panel {
+  background: rgba(255, 253, 248, 0.84);
+  border: 1px solid rgba(18, 65, 112, 0.12);
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+}
+
+.hero-copy {
+  padding: 2rem;
+}
+
+.eyebrow,
+.section-kicker {
+  display: inline-block;
+  margin-bottom: 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+}
+
+.hero h1,
+.section-heading h2 {
+  margin: 0;
+  line-height: 1.05;
+  font-family: Georgia, "Times New Roman", serif;
+  letter-spacing: -0.02em;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4.8rem);
+}
+
+.hero-text,
+.section-heading p,
+.goal-card p,
+.resource-card p,
+.lecture-body p,
+.exercise-note,
+.exercise-empty p,
+.exercise-set-description {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 1.6rem;
+}
+
+.hero-panel {
+  padding: 1rem;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.stat-card {
+  padding: 1.1rem 1.15rem;
+  border-radius: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.stat-card strong {
+  display: block;
+  margin: 0.3rem 0 0.15rem;
+  font-size: 2rem;
+  color: var(--accent);
+}
+
+.stat-label,
+.stat-note,
+.lecture-meta {
+  font-size: 0.88rem;
+}
+
+.stat-label {
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.stat-note {
+  color: var(--muted);
+}
+
+.section {
+  padding: 1.2rem 0 4rem;
+}
+
+.section-alt {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), rgba(234, 229, 220, 0.55));
+  border-block: 1px solid rgba(18, 65, 112, 0.08);
+}
+
+.section-heading {
+  max-width: 760px;
+  margin-bottom: 1.7rem;
+}
+
+.section-heading h2 {
+  font-size: clamp(1.9rem, 4vw, 3rem);
+}
+
+.goal-grid,
+.lecture-grid,
+.resource-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.goal-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.goal-card,
+.resource-card,
+.lecture-card,
+.exercise-list button,
+.exercise-panel,
+.exercise-note {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.goal-card,
+.resource-card,
+.exercise-note {
+  padding: 1.4rem;
+}
+
+.lecture-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lecture-card {
+  overflow: hidden;
+}
+
+.lecture-card-featured {
+  grid-column: span 3;
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+}
+
+.lecture-poster {
+  min-height: 170px;
+  display: flex;
+  align-items: flex-end;
+  padding: 1.1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: white;
+}
+
+.lecture-poster span {
+  display: inline-flex;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(6px);
+}
+
+.lecture-poster-intro {
+  background: linear-gradient(135deg, #124170 0%, #2d6e9a 100%);
+}
+
+.lecture-poster-online {
+  background: linear-gradient(135deg, #587278 0%, #124170 100%);
+}
+
+.lecture-poster-presence {
+  background: linear-gradient(135deg, #8d4d27 0%, #c96d33 100%);
+}
+
+.lecture-body {
+  padding: 1.2rem 1.2rem 1.3rem;
+}
+
+.lecture-body h3,
+.resource-card h3,
+.exercise-empty h3,
+.exercise-header h3,
+.question-card h4 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.lecture-body h3 span {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.lecture-meta {
+  margin: 0 0 0.45rem;
+  color: var(--accent-warm);
+  font-weight: 700;
+}
+
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+
+.link-row a {
+  font-weight: 700;
+}
+
+.exercise-intro {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.3rem;
+}
+
+.exercise-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.exercise-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.exercise-list button {
+  width: 100%;
+  padding: 1rem 1.1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.exercise-list button strong,
+.exercise-list button span {
+  display: block;
+}
+
+.exercise-list button strong {
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.exercise-list button span {
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.exercise-list button.active {
+  border-color: rgba(18, 65, 112, 0.35);
+  background: var(--accent-soft);
+}
+
+.exercise-panel {
+  padding: 1.3rem;
+}
+
+.exercise-header {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.exercise-header p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+}
+
+.exercise-links {
+  margin-top: 0.8rem;
+}
+
+.question-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.question-card {
+  padding: 1rem;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: #fffcf6;
+}
+
+.question-number {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  background: var(--surface-strong);
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.question-card p {
+  margin: 0;
+}
+
+.question-body img {
+  max-width: 100%;
+  height: auto;
+}
+
+.answer-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.answer-row input {
+  flex: 1 1 240px;
+  min-height: 46px;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(18, 65, 112, 0.2);
+  background: white;
+  font: inherit;
+}
+
+.answer-row button {
+  min-height: 46px;
+  padding: 0.75rem 1rem;
+  border: 0;
+  border-radius: 14px;
+  background: var(--accent);
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.feedback {
+  display: none;
+  margin-top: 0.85rem;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  line-height: 1.65;
+}
+
+.feedback.is-visible {
+  display: block;
+}
+
+.feedback-success {
+  background: rgba(74, 146, 89, 0.12);
+  border: 1px solid rgba(74, 146, 89, 0.22);
+}
+
+.feedback-error {
+  background: rgba(201, 109, 51, 0.12);
+  border: 1px solid rgba(201, 109, 51, 0.2);
+}
+
+.feedback p {
+  margin: 0;
+}
+
+.resource-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 980px) {
+  .hero,
+  .lecture-card-featured,
+  .exercise-layout,
+  .goal-grid,
+  .resource-grid,
+  .exercise-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .lecture-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lecture-card-featured {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .topnav {
+    justify-content: flex-start;
+  }
+
+  .lecture-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copy,
+  .hero-panel,
+  .exercise-panel,
+  .goal-card,
+  .resource-card,
+  .exercise-note {
+    padding: 1.15rem;
+  }
+
+  .answer-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
