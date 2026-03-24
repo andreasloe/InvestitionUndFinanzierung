@@ -1,5 +1,5 @@
 # InvestitionUndFinanzierung
-Vorlesung Investition und Finanzierung
+Vorlesung Investition und Finanzierung an der Freien Universität Berlin
 
 GitHub Pages:
 
