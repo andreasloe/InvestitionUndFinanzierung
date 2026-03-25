@@ -149,7 +149,6 @@ a:hover {
 
 .hero-text,
 .section-heading p,
-.goal-card p,
 .resource-card p,
 .lecture-body p,
 .exercise-note,
@@ -167,38 +166,27 @@ a:hover {
 }
 
 .hero-panel {
-  padding: 1rem;
+  padding: 1.35rem;
+}
+
+.hero-panel-goals {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hero-goals {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.95rem;
 }
 
-.stat-card {
-  padding: 1.1rem 1.15rem;
-  border-radius: 22px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-}
-
-.stat-card strong {
-  display: block;
-  margin: 0.3rem 0 0.15rem;
-  font-size: 2rem;
-  color: var(--accent);
-}
-
-.stat-label,
-.stat-note,
+.hero-goals p,
+.section-lead,
 .lecture-meta {
-  font-size: 0.88rem;
-}
-
-.stat-label {
-  font-weight: 700;
+  margin: 0;
+  font-size: 0.92rem;
   color: var(--muted);
-}
-
-.stat-note {
-  color: var(--muted);
+  line-height: 1.7;
 }
 
 .section {
@@ -219,18 +207,12 @@ a:hover {
   font-size: clamp(1.9rem, 4vw, 3rem);
 }
 
-.goal-grid,
 .lecture-grid,
 .resource-grid {
   display: grid;
   gap: 1rem;
 }
 
-.goal-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.goal-card,
 .resource-card,
 .lecture-card,
 .exercise-list button,
@@ -242,7 +224,6 @@ a:hover {
   box-shadow: var(--shadow);
 }
 
-.goal-card,
 .resource-card,
 .exercise-note {
   padding: 1.4rem;
