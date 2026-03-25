@@ -274,7 +274,7 @@ a:hover {
   background:
     linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
     url("./assets/praesenz-hoersaal.jpg");
-  background-position: center center;
+  background-position: center 58%;
 }
 
 .lecture-poster-online {
@@ -282,14 +282,14 @@ a:hover {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     #ffffff;
-  background-position: center center;
-  background-size: 128% auto;
+  background-position: center 44%;
+  background-size: 118% auto;
   background-color: #dfe4eb;
 }
 
 .lecture-poster-online span {
-  color: #233142;
-  background: rgba(255, 253, 248, 0.88);
+  color: #ffffff;
+  background: rgba(35, 49, 66, 0.86);
 }
 
 .lecture-poster-finanzmathematik {
