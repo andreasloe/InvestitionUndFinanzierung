@@ -301,31 +301,31 @@ a:hover {
 .lecture-poster-sicherheit {
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
-    url("./assets/thumb-finanzmathematik.png");
+    url("./assets/thumb-sicherheit.png");
 }
 
 .lecture-poster-steuern {
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
-    url("./assets/thumb-finanzmathematik.png");
+    url("./assets/thumb-steuern.png");
 }
 
 .lecture-poster-fisher {
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
-    url("./assets/thumb-finanzmathematik.png");
+    url("./assets/thumb-fisher.png");
 }
 
 .lecture-poster-unsicherheit {
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
-    url("./assets/thumb-finanzmathematik.png");
+    url("./assets/thumb-unsicherheit.png");
 }
 
 .lecture-poster-finanzinstrumente {
   background-image:
     linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
-    url("./assets/thumb-finanzmathematik.png");
+    url("./assets/thumb-finanzinstrumente.png");
 }
 
 .lecture-poster-presence {
