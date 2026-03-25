@@ -240,7 +240,7 @@ a:hover {
 .lecture-card-featured {
   grid-column: span 3;
   display: grid;
-  grid-template-columns: minmax(360px, 520px) minmax(0, 1fr);
+  grid-template-columns: minmax(440px, 620px) minmax(0, 1fr);
 }
 
 .lecture-poster {
@@ -271,11 +271,11 @@ a:hover {
 }
 
 .lecture-poster-intro-hall {
-  min-height: 340px;
+  min-height: 400px;
   background:
     linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
     url("./assets/praesenz-hoersaal.jpg");
-  background-position: center 66%;
+  background-position: center 70%;
 }
 
 .lecture-poster-online {
@@ -343,6 +343,14 @@ a:hover {
   padding: 1.2rem 1.2rem 1.3rem;
 }
 
+.lecture-poster-link {
+  display: block;
+  margin: 0.9rem 0 0.95rem;
+  border-radius: calc(var(--radius) - 10px);
+  overflow: hidden;
+  text-decoration: none;
+}
+
 .lecture-body h3,
 .resource-card h3,
 .exercise-empty h3,
@@ -350,15 +358,6 @@ a:hover {
 .question-card h4 {
   margin: 0;
   font-size: 1.15rem;
-}
-
-.lecture-body h3 a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.lecture-body h3 a:hover {
-  text-decoration: underline;
 }
 
 .imprint-box {
@@ -372,11 +371,6 @@ a:hover {
 
 .imprint-box p:last-child {
   margin-bottom: 0;
-}
-
-.lecture-body h3 span {
-  color: var(--muted);
-  font-weight: 600;
 }
 
 .lecture-meta {
@@ -393,6 +387,13 @@ a:hover {
 
 .link-row a {
   font-weight: 700;
+}
+
+.lecture-duration {
+  align-self: center;
+  color: var(--muted);
+  font-size: 0.95rem;
+  font-weight: 600;
 }
 
 .exercise-intro {
