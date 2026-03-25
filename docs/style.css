@@ -317,7 +317,10 @@ a:hover {
   background:
     linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
     url("./assets/praesenz-hoersaal.jpg");
-  background-position: center 54%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: #62666d;
 }
 
 .lecture-body {
