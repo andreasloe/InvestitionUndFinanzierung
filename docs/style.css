@@ -240,7 +240,7 @@ a:hover {
 .lecture-card-featured {
   grid-column: span 3;
   display: grid;
-  grid-template-columns: minmax(180px, 280px) minmax(0, 1fr);
+  grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
 }
 
 .lecture-poster {
@@ -271,6 +271,7 @@ a:hover {
 }
 
 .lecture-poster-intro-hall {
+  min-height: 260px;
   background:
     linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
     url("./assets/praesenz-hoersaal.jpg");
