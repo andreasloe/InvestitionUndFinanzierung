@@ -240,7 +240,8 @@ a:hover {
 .lecture-card-featured {
   grid-column: span 3;
   display: grid;
-  grid-template-columns: minmax(500px, 700px) minmax(0, 1fr);
+  grid-template-columns: minmax(420px, 560px) minmax(0, 1fr);
+  align-items: stretch;
 }
 
 .lecture-poster {
@@ -271,11 +272,13 @@ a:hover {
 }
 
 .lecture-poster-intro-hall {
-  min-height: 460px;
+  min-height: 0;
+  height: 100%;
+  aspect-ratio: 16 / 10;
   background:
     linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
     url("./assets/praesenz-hoersaal.jpg");
-  background-position: center 72%;
+  background-position: center center;
 }
 
 .lecture-poster-online {
