@@ -4,6 +4,8 @@ const exerciseSets = [
     title: "Aufgabenset 1",
     description: "Finanzmathematik",
     file: "./qti/set1.xml",
+    solutionHref: "./exercises/loesung_ab1a11.pdf",
+    solutionLabel: "Musterlösung AB1A11",
     resources: [
       { label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" },
       { label: "Excel AB1A11", href: "./assets/AB1A11_Naeherung.xlsx" },
@@ -65,6 +67,8 @@ const exerciseSets = [
     title: "Probeklausur",
     description: "Interaktive Fassung der numerischen Klausuraufgaben",
     file: "./qti/probeklausur.xml",
+    solutionHref: "./exercises/probeklausur_musterloesung.pdf",
+    solutionLabel: "Musterlösung Probeklausur",
     resources: [
       { label: "Klausur-PDF", href: "./exercises/probeklausur.pdf" },
       { label: "Musterlösung", href: "./exercises/probeklausur_musterloesung.pdf" },
@@ -174,7 +178,44 @@ function formatSolution(question) {
   return "";
 }
 
-function evaluateAnswer(question, rawValue) {
+function hasDetailedFeedback(html) {
+  const text = (html || "")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+
+  if (!text) {
+    return false;
+  }
+
+  return (
+    text.length > 120 ||
+    text.includes("hinweis") ||
+    text.includes("minute") ||
+    text.includes("excel") ||
+    text.includes("muster") ||
+    html.includes("Wirisformula")
+  );
+}
+
+function buildFallbackFeedback(question, meta) {
+  const solution = formatSolution(question);
+  const solutionHtml = solution
+    ? `<p><strong>Richtige Lösung:</strong> ${solution}</p>`
+    : "";
+  const solutionLink =
+    meta.solutionHref && meta.solutionLabel
+      ? `<p><a href="${meta.solutionHref}" target="_blank">${meta.solutionLabel}</a></p>`
+      : "";
+  const note = meta.solutionHref
+    ? "<p>Den vollständigen Lösungsweg finden Sie in der verlinkten Musterlösung.</p>"
+    : "<p>Für diese Aufgabe enthält der Blackboard-Export keinen ausführlichen Rechenweg. Der korrekte Zielwert steht oben.</p>";
+
+  return `<p>Ihre Antwort ist leider falsch.</p>${solutionHtml}${note}${solutionLink}`;
+}
+
+function evaluateAnswer(question, rawValue, meta) {
   const normalized = rawValue.trim().replace(/\s+/g, "").replace(",", ".");
   const numeric = Number.parseFloat(normalized);
   if (!Number.isFinite(numeric)) {
@@ -202,19 +243,19 @@ function evaluateAnswer(question, rawValue) {
     };
   }
 
-  const solution = formatSolution(question);
-  const fallback = solution
-    ? `<p>Ihre Antwort ist leider falsch.</p><p><strong>Musterlösung:</strong> ${solution}</p>`
-    : "<p>Ihre Antwort ist leider falsch.</p>";
+  const fallback = buildFallbackFeedback(question, meta);
+  const incorrectHtml = hasDetailedFeedback(question.incorrectFeedback)
+    ? question.incorrectFeedback
+    : fallback;
 
   return {
     ok: false,
-    html: question.incorrectFeedback || fallback,
+    html: incorrectHtml,
     kind: "error",
   };
 }
 
-function renderQuestion(question, index) {
+function renderQuestion(question, index, meta) {
   const article = document.createElement("article");
   article.className = "question-card";
 
@@ -235,7 +276,7 @@ function renderQuestion(question, index) {
   const feedback = article.querySelector(".feedback");
 
   function check() {
-    const result = evaluateAnswer(question, input.value);
+    const result = evaluateAnswer(question, input.value, meta);
     feedback.className = `feedback is-visible ${
       result.kind === "success" ? "feedback-success" : "feedback-error"
     }`;
@@ -269,7 +310,9 @@ function renderExerciseSet(meta, data) {
   `;
 
   const list = panel.querySelector(".question-list");
-  data.items.forEach((question, index) => list.appendChild(renderQuestion(question, index)));
+  data.items.forEach((question, index) =>
+    list.appendChild(renderQuestion(question, index, meta))
+  );
 }
 
 async function loadExerciseSet(meta, button) {
