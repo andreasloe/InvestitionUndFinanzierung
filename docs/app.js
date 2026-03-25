@@ -4,8 +4,8 @@ const exerciseSets = [
     title: "Aufgabenset 1",
     description: "Finanzmathematik",
     file: "./qti/set1.xml",
-    solutionHref: "./exercises/loesung_ab1a11.pdf",
-    solutionLabel: "Musterlösung AB1A11",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [
       { label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" },
       { label: "Excel AB1A11", href: "./assets/AB1A11_Naeherung.xlsx" },
@@ -16,6 +16,8 @@ const exerciseSets = [
     title: "Zusatz zu Set 1",
     description: "Ergänzende Aufgaben zu Finanzmathematik",
     file: "./qti/set1_extra.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [
       { label: "Excel Zusatz AB1A11", href: "./assets/zusAB1A11_Naeherung.xlsx" },
     ],
@@ -25,6 +27,8 @@ const exerciseSets = [
     title: "Aufgabenset 2",
     description: "Investitionsrechnung unter Sicherheit",
     file: "./qti/set2.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -32,6 +36,8 @@ const exerciseSets = [
     title: "Zusatz zu Set 2",
     description: "Ergänzungen zu Sicherheit und Steuern",
     file: "./qti/set2_extra.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -39,6 +45,8 @@ const exerciseSets = [
     title: "Aufgabenset 3",
     description: "Fisher-Modell",
     file: "./qti/set3.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -46,6 +54,8 @@ const exerciseSets = [
     title: "Zusatz zu Set 3",
     description: "Weitere Aufgaben zum Fisher-Modell",
     file: "./qti/set3_extra.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -53,6 +63,8 @@ const exerciseSets = [
     title: "Aufgabenset 4",
     description: "Investitionsrechnung unter Unsicherheit",
     file: "./qti/set4.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -60,6 +72,8 @@ const exerciseSets = [
     title: "Zusatz zu Set 4",
     description: "Vertiefung und zusätzliche Rechenaufgaben",
     file: "./qti/set4_extra.xml",
+    solutionHref: "./exercises/uebungsaufgaben.pdf",
+    solutionLabel: "Übungsaufgaben / Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
