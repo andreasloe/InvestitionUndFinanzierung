@@ -272,43 +272,44 @@ a:hover {
 
 .lecture-poster-online {
   background:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.42), rgba(18, 65, 112, 0.58)),
-    #587278;
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.22)),
+    #f2f4f7;
+  background-position: center top;
 }
 
 .lecture-poster-finanzmathematik {
   background-image:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.22)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
 .lecture-poster-sicherheit {
   background-image:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.22)),
     url("./assets/thumb-sicherheit.png");
 }
 
 .lecture-poster-steuern {
   background-image:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.22)),
     url("./assets/thumb-steuern.png");
 }
 
 .lecture-poster-fisher {
   background-image:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.22)),
     url("./assets/thumb-fisher.png");
 }
 
 .lecture-poster-unsicherheit {
   background-image:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.22)),
     url("./assets/thumb-unsicherheit.png");
 }
 
 .lecture-poster-finanzinstrumente {
   background-image:
-    linear-gradient(135deg, rgba(21, 47, 70, 0.46), rgba(18, 65, 112, 0.6)),
+    linear-gradient(180deg, rgba(21, 47, 70, 0.16), rgba(18, 65, 112, 0.24)),
     url("./assets/thumb-finanzinstrumente.png");
 }
 
