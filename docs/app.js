@@ -5,7 +5,7 @@ const exerciseSets = [
     description: "Finanzmathematik",
     file: "./qti/set1.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [
       { label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" },
       { label: "Excel AB1A11", href: "./assets/AB1A11_Naeherung.xlsx" },
@@ -17,7 +17,7 @@ const exerciseSets = [
     description: "Ergänzende Aufgaben zu Finanzmathematik",
     file: "./qti/set1_extra.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [
       { label: "Excel Zusatz AB1A11", href: "./assets/zusAB1A11_Naeherung.xlsx" },
     ],
@@ -28,7 +28,7 @@ const exerciseSets = [
     description: "Investitionsrechnung unter Sicherheit",
     file: "./qti/set2.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -37,7 +37,7 @@ const exerciseSets = [
     description: "Ergänzungen zu Sicherheit und Steuern",
     file: "./qti/set2_extra.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -46,7 +46,7 @@ const exerciseSets = [
     description: "Fisher-Modell",
     file: "./qti/set3.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -55,7 +55,7 @@ const exerciseSets = [
     description: "Weitere Aufgaben zum Fisher-Modell",
     file: "./qti/set3_extra.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -64,7 +64,7 @@ const exerciseSets = [
     description: "Investitionsrechnung unter Unsicherheit",
     file: "./qti/set4.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -73,7 +73,7 @@ const exerciseSets = [
     description: "Vertiefung und zusätzliche Rechenaufgaben",
     file: "./qti/set4_extra.xml",
     solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Übungsaufgaben / Musterlösung",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -82,7 +82,7 @@ const exerciseSets = [
     description: "Interaktive Fassung der numerischen Klausuraufgaben",
     file: "./qti/probeklausur.xml",
     solutionHref: "./exercises/probeklausur_musterloesung.pdf",
-    solutionLabel: "Musterlösung Probeklausur",
+    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [
       { label: "Klausur-PDF", href: "./exercises/probeklausur.pdf" },
       { label: "Musterlösung", href: "./exercises/probeklausur_musterloesung.pdf" },
