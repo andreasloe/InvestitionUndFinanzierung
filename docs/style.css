@@ -286,7 +286,57 @@ a:hover {
 }
 
 .lecture-poster-online {
-  background: linear-gradient(135deg, #587278 0%, #124170 100%);
+  background:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.3), rgba(18, 65, 112, 0.48)),
+    #587278;
+}
+
+.lecture-poster-finanzmathematik {
+  background-image:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.32), rgba(18, 65, 112, 0.5)),
+    url("./assets/thumb-finanzmathematik.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.lecture-poster-sicherheit {
+  background-image:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.3), rgba(18, 65, 112, 0.48)),
+    url("./assets/thumb-sicherheit.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.lecture-poster-steuern {
+  background-image:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.28), rgba(18, 65, 112, 0.5)),
+    url("./assets/thumb-steuern.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.lecture-poster-fisher {
+  background-image:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.28), rgba(18, 65, 112, 0.48)),
+    url("./assets/thumb-fisher.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.lecture-poster-unsicherheit {
+  background-image:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.28), rgba(18, 65, 112, 0.48)),
+    url("./assets/thumb-unsicherheit.png");
+  background-position: center;
+  background-size: cover;
+}
+
+.lecture-poster-finanzinstrumente {
+  background-image:
+    linear-gradient(135deg, rgba(21, 47, 70, 0.3), rgba(18, 65, 112, 0.52)),
+    url("./assets/thumb-finanzinstrumente.png");
+  background-position: center;
+  background-size: cover;
 }
 
 .lecture-poster-presence {
