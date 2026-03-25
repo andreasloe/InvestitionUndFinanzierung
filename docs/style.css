@@ -319,8 +319,7 @@ a:hover {
     url("./assets/praesenz-hoersaal.jpg");
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: contain;
-  background-color: #62666d;
+  background-size: cover;
 }
 
 .lecture-body {
