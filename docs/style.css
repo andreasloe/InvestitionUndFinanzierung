@@ -273,49 +273,51 @@ a:hover {
 .lecture-poster-online {
   min-height: 156px;
   background:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.16)),
-    #f2f4f7;
-  background-position: center top;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
+    #ffffff;
+  background-position: center center;
+  background-size: contain;
+  background-color: #dfe4eb;
 }
 
 .lecture-poster-online span {
   color: #233142;
-  background: rgba(255, 253, 248, 0.72);
+  background: rgba(255, 253, 248, 0.88);
 }
 
 .lecture-poster-finanzmathematik {
   background-image:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.16)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
 .lecture-poster-sicherheit {
   background-image:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.16)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
 .lecture-poster-steuern {
   background-image:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.16)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
 .lecture-poster-fisher {
   background-image:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.16)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
 .lecture-poster-unsicherheit {
   background-image:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.16)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
 .lecture-poster-finanzinstrumente {
   background-image:
-    linear-gradient(180deg, rgba(21, 47, 70, 0.1), rgba(18, 65, 112, 0.18)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(30, 44, 60, 0.04)),
     url("./assets/thumb-finanzmathematik.png");
 }
 
@@ -340,6 +342,15 @@ a:hover {
 .question-card h4 {
   margin: 0;
   font-size: 1.15rem;
+}
+
+.lecture-body h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lecture-body h3 a:hover {
+  text-decoration: underline;
 }
 
 .imprint-box {
