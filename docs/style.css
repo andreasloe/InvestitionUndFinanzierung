@@ -244,7 +244,7 @@ a:hover {
 }
 
 .lecture-poster {
-  min-height: 136px;
+  min-height: 182px;
   display: flex;
   align-items: flex-end;
   justify-content: flex-start;
@@ -253,6 +253,8 @@ a:hover {
   font-weight: 800;
   letter-spacing: 0.04em;
   color: white;
+  position: relative;
+  overflow: hidden;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -267,7 +269,15 @@ a:hover {
 }
 
 .lecture-poster-intro {
-  background: linear-gradient(135deg, #124170 0%, #2d6e9a 100%);
+  background:
+    linear-gradient(135deg, rgba(18, 65, 112, 0.42), rgba(45, 110, 154, 0.52)),
+    #124170;
+}
+
+.lecture-poster-einfuehrung {
+  background-image:
+    linear-gradient(135deg, rgba(18, 65, 112, 0.42), rgba(45, 110, 154, 0.52)),
+    url("./assets/slide-thumbs/00_Einfuehrung.pdf.png");
 }
 
 .lecture-poster-online {
@@ -279,43 +289,76 @@ a:hover {
 .lecture-poster-finanzmathematik {
   background-image:
     linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
-    url("./assets/thumb-finanzmathematik.png");
+    url("./assets/slide-thumbs/01_FiMa.pdf.png");
 }
 
 .lecture-poster-sicherheit {
   background-image:
     linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
-    url("./assets/thumb-sicherheit.png");
+    url("./assets/slide-thumbs/02_Entscheidung.pdf.png");
 }
 
 .lecture-poster-steuern {
   background-image:
     linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
-    url("./assets/thumb-steuern.png");
+    url("./assets/slide-thumbs/02b_EntscheidungSteuern.pdf.png");
 }
 
 .lecture-poster-fisher {
   background-image:
     linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
-    url("./assets/thumb-fisher.png");
+    url("./assets/slide-thumbs/03_IRsicher.pdf.png");
 }
 
 .lecture-poster-unsicherheit {
   background-image:
     linear-gradient(135deg, rgba(21, 47, 70, 0.44), rgba(18, 65, 112, 0.58)),
-    url("./assets/thumb-unsicherheit.png");
+    url("./assets/slide-thumbs/04_IRunsicher.pdf.png");
 }
 
 .lecture-poster-finanzinstrumente {
   background-image:
     linear-gradient(135deg, rgba(21, 47, 70, 0.46), rgba(18, 65, 112, 0.6)),
-    url("./assets/thumb-finanzinstrumente.png");
+    url("./assets/slide-thumbs/05_Termingeschaefte.pdf.png");
 }
 
 .lecture-poster-presence {
   background:
-    linear-gradient(135deg, rgba(26, 36, 52, 0.5), rgba(141, 77, 39, 0.52)),
-    url("./assets/praesenz-hoersaal.jpg");
+    linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
+    #6d7077;
+}
+
+.lecture-poster-presence::after {
+  content: "";
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 34%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: 0 10px 20px rgba(10, 16, 24, 0.18);
+  background:
+    linear-gradient(180deg, rgba(20, 29, 40, 0.06), rgba(20, 29, 40, 0.18)),
+    url("./assets/praesenz-hoersaal.jpg") center/cover no-repeat;
+}
+
+.lecture-poster-personenschaeden {
+  background-image:
+    linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
+    url("./assets/slide-thumbs/06_personenschaeden.pdf.png");
+}
+
+.lecture-poster-waelder {
+  background-image:
+    linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
+    url("./assets/slide-thumbs/07_Waelder.pdf.png");
+}
+
+.lecture-poster-probeklausur {
+  background-image:
+    linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
+    url("./assets/slide-thumbs/08_Probeklausur.pdf.png");
 }
 
 .lecture-body {
