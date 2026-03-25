@@ -5,3 +5,5 @@ GitHub Pages:
 
 - `docs/index.html`
 - https://andreasloe.github.io/InvestitionUndFinanzierung/
+
+See Imprint on https://andreasloe.github.io/InvestitionUndFinanzierung/#imprint

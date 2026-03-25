@@ -331,6 +331,19 @@ a:hover {
   font-size: 1.15rem;
 }
 
+.imprint-box {
+  background: #fbfbfc;
+}
+
+.imprint-box p {
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.imprint-box p:last-child {
+  margin-bottom: 0;
+}
+
 .lecture-body h3 span {
   color: var(--muted);
   font-weight: 600;
