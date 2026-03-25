@@ -313,9 +313,11 @@ a:hover {
 }
 
 .lecture-poster-presence {
+  min-height: 220px;
   background:
-    linear-gradient(135deg, rgba(26, 36, 52, 0.5), rgba(141, 77, 39, 0.52)),
+    linear-gradient(135deg, rgba(26, 36, 52, 0.38), rgba(141, 77, 39, 0.34)),
     url("./assets/praesenz-hoersaal.jpg");
+  background-position: center 54%;
 }
 
 .lecture-body {
