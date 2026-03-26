@@ -55,13 +55,6 @@ const exerciseSets = [
     file: "./qti/set4_extra.xml",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
-  {
-    id: "mock",
-    title: "Probeklausur",
-    description: "Interaktive Fassung der numerischen Klausuraufgaben",
-    file: "./qti/probeklausur.xml",
-    resources: [{ label: "Klausur-PDF", href: "./exercises/probeklausur.pdf" }],
-  },
 ];
 
 const solutionDataPromise = fetch("./data/exercise_solutions.json")
