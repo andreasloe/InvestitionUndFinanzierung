@@ -84,10 +84,19 @@ def clean_solution_text(text: str) -> str:
             line = raw_line.strip()
             if not line or line.startswith("%"):
                 continue
-            line = line.replace(r"\hline", "")
+            line = re.sub(r"\\(hline|cline\{[^}]+\})", "", line)
+            line = re.sub(r"\\multicolumn\{[^}]+\}\{[^}]+\}\{([^}]*)\}", r"\1", line)
+            line = line.replace(r"\Stt", "")
+            line = line.replace(r"\black", "")
+            line = line.replace(r"\gray", "")
+            line = line.replace("~", " ")
             parts = [part.strip() for part in line.split(r"\\") if part.strip()]
             for part in parts:
                 part = re.sub(r"\s*&\s*", " | ", part)
+                part = re.sub(r"\{\}", "", part)
+                part = re.sub(r"^\|+\s*", "", part)
+                part = re.sub(r"\s*\|+\s*$", "", part)
+                part = re.sub(r"\|\s*\|", "|", part)
                 part = re.sub(r"\s{2,}", " ", part)
                 if part:
                     rows.append(part)
@@ -131,9 +140,14 @@ def clean_solution_text(text: str) -> str:
     text = re.sub(r"\\caption\{[^}]+\}", "", text)
     text = re.sub(r"\\begin\{figure\}(?:\[[^\]]*\])?", "", text)
     text = re.sub(r"\\end\{figure\}", "", text)
+    text = re.sub(r"\\begin\{center\}", "", text)
+    text = re.sub(r"\\end\{center\}", "", text)
+    text = re.sub(r"\\begin\{small\}", "", text)
+    text = re.sub(r"\\end\{small\}", "", text)
     text = re.sub(r"\\begin\{[^}]+\}", "", text)
     text = re.sub(r"\\end\{[^}]+\}", "", text)
     text = re.sub(r"\\item\[([^\]]+)\]", r"\n\1 ", text)
+    text = re.sub(r"\\multicolumn\{[^}]+\}\{[^}]+\}\{([^}]*)\}", r"\1", text)
     text = re.sub(r"\\(textit|emph|textbf)\{", "{", text)
     text = re.sub(r"^\s*\[[a-z]{1,3}\]\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^\s*[clr|]+\s*$", "", text, flags=re.MULTILINE)
@@ -143,6 +157,7 @@ def clean_solution_text(text: str) -> str:
     for old, new in substitutions.items():
         text = text.replace(old, new)
 
+    text = text.replace("{", "").replace("}", "")
     text = text.replace("&", "")
     text = re.sub(r"\\\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"\n{3,}", "\n\n", text)

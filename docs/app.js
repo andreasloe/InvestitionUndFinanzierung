@@ -233,9 +233,22 @@ function isTableLine(line) {
 }
 
 function renderSolutionTable(lines) {
-  const rows = lines
-    .map((line) => line.split("|").map((cell) => cell.trim()).filter(Boolean))
-    .filter((cells) => cells.length > 1);
+  const rows = [];
+
+  lines.forEach((line) => {
+    const cells = line.split("|").map((cell) => cell.trim()).filter(Boolean);
+
+    if (line.trim().startsWith("|") && cells.length === 1 && rows.length) {
+      rows[rows.length - 1].push(cells[0]);
+      return;
+    }
+
+    if (cells.length <= 1) {
+      return;
+    }
+
+    rows.push(cells);
+  });
 
   if (!rows.length) {
     return "";
