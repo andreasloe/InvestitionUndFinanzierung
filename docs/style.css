@@ -554,6 +554,28 @@ a:hover {
   margin: 0;
 }
 
+.solution-details {
+  margin-top: 0.85rem;
+  border-top: 1px solid rgba(18, 65, 112, 0.12);
+  padding-top: 0.75rem;
+}
+
+.solution-details summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.solution-details pre {
+  margin: 0.85rem 0 0;
+  padding: 0.9rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  border-radius: 14px;
+  background: rgba(18, 65, 112, 0.05);
+  font: 0.95rem/1.55 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
 .resource-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }

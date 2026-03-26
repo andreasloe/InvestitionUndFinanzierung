@@ -4,31 +4,20 @@ const exerciseSets = [
     title: "Aufgabenset 1",
     description: "Finanzmathematik",
     file: "./qti/set1.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
-    resources: [
-      { label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" },
-      { label: "Excel AB1A11", href: "./assets/AB1A11_Naeherung.xlsx" },
-    ],
+    resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
     id: "set1-extra",
     title: "Zusatz zu Set 1",
     description: "Ergänzende Aufgaben zu Finanzmathematik",
     file: "./qti/set1_extra.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
-    resources: [
-      { label: "Excel Zusatz AB1A11", href: "./assets/zusAB1A11_Naeherung.xlsx" },
-    ],
+    resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
     id: "set2",
     title: "Aufgabenset 2",
     description: "Investitionsrechnung unter Sicherheit",
     file: "./qti/set2.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -36,8 +25,6 @@ const exerciseSets = [
     title: "Zusatz zu Set 2",
     description: "Ergänzungen zu Sicherheit und Steuern",
     file: "./qti/set2_extra.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -45,8 +32,6 @@ const exerciseSets = [
     title: "Aufgabenset 3",
     description: "Fisher-Modell",
     file: "./qti/set3.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -54,8 +39,6 @@ const exerciseSets = [
     title: "Zusatz zu Set 3",
     description: "Weitere Aufgaben zum Fisher-Modell",
     file: "./qti/set3_extra.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -63,8 +46,6 @@ const exerciseSets = [
     title: "Aufgabenset 4",
     description: "Investitionsrechnung unter Unsicherheit",
     file: "./qti/set4.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -72,8 +53,6 @@ const exerciseSets = [
     title: "Zusatz zu Set 4",
     description: "Vertiefung und zusätzliche Rechenaufgaben",
     file: "./qti/set4_extra.xml",
-    solutionHref: "./exercises/uebungsaufgaben.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
   },
   {
@@ -81,14 +60,13 @@ const exerciseSets = [
     title: "Probeklausur",
     description: "Interaktive Fassung der numerischen Klausuraufgaben",
     file: "./qti/probeklausur.xml",
-    solutionHref: "./exercises/probeklausur_musterloesung.pdf",
-    solutionLabel: "Zur vollständigen Musterlösung",
-    resources: [
-      { label: "Klausur-PDF", href: "./exercises/probeklausur.pdf" },
-      { label: "Musterlösung", href: "./exercises/probeklausur_musterloesung.pdf" },
-    ],
+    resources: [{ label: "Klausur-PDF", href: "./exercises/probeklausur.pdf" }],
   },
 ];
+
+const solutionDataPromise = fetch("./data/exercise_solutions.json")
+  .then((response) => (response.ok ? response.json() : {}))
+  .catch(() => ({}));
 
 function decodeHtmlEntities(value) {
   const textarea = document.createElement("textarea");
@@ -96,14 +74,26 @@ function decodeHtmlEntities(value) {
   return textarea.value;
 }
 
-function cleanHtml(html) {
+function escapeHtml(value) {
+  return (value || "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function cleanHtml(html, options = {}) {
   const decoded = decodeHtmlEntities(html || "");
   const template = document.createElement("template");
   template.innerHTML = decoded;
 
-  template.content
-    .querySelectorAll("script, style, xml, meta, link, applet, object")
-    .forEach((node) => node.remove());
+  const selectors = ["script", "style", "xml", "meta", "link", "applet", "object"];
+  if (options.removeImages) {
+    selectors.push("img");
+  }
+
+  template.content.querySelectorAll(selectors.join(", ")).forEach((node) => node.remove());
 
   template.content.querySelectorAll("*").forEach((node) => {
     [...node.attributes].forEach((attr) => {
@@ -117,20 +107,29 @@ function cleanHtml(html) {
   return template.innerHTML.trim();
 }
 
-function textOrHtml(node, selector) {
+function textOrHtml(node, selector, options = {}) {
   const target = node.querySelector(selector);
-  return cleanHtml(target ? target.textContent : "");
+  return cleanHtml(target ? target.textContent : "", options);
 }
 
-function parseQuestion(item) {
+function normalizeQuestionKey(title) {
+  const match = (title || "").match(/Aufgabe\s+\d+/);
+  return match ? match[0].trim() : (title || "Aufgabe").trim();
+}
+
+function parseQuestion(item, solutionLookup) {
   const type = item.querySelector("bbmd_questiontype")?.textContent?.trim() || "";
   if (type !== "Numeric") {
     return null;
   }
 
+  const title = item.getAttribute("title") || "Aufgabe";
   const prompt = textOrHtml(item, "presentation mat_formattedtext");
-  const correctFeedback = textOrHtml(item, 'itemfeedback[ident="correct"] mat_formattedtext');
-  const incorrectFeedback = textOrHtml(item, 'itemfeedback[ident="incorrect"] mat_formattedtext');
+  const incorrectFeedback = textOrHtml(
+    item,
+    'itemfeedback[ident="incorrect"] mat_formattedtext',
+    { removeImages: true }
+  );
   const conditions = item.querySelectorAll("resprocessing respcondition conditionvar");
 
   let min = null;
@@ -157,23 +156,23 @@ function parseQuestion(item) {
   }
 
   return {
-    title: item.getAttribute("title") || "Aufgabe",
+    title,
     prompt,
-    correctFeedback,
     incorrectFeedback,
     min,
     max,
     exact,
+    solutionText: solutionLookup[normalizeQuestionKey(title)] || "",
   };
 }
 
-function parseExerciseXml(xmlText) {
+function parseExerciseXml(xmlText, solutionLookup) {
   const parser = new DOMParser();
   const xml = parser.parseFromString(xmlText, "application/xml");
   const title = xml.querySelector("assessment")?.getAttribute("title") || "Aufgabenset";
   const intro = textOrHtml(xml, "presentation_material mat_formattedtext");
   const items = [...xml.querySelectorAll("section > item")]
-    .map(parseQuestion)
+    .map((item) => parseQuestion(item, solutionLookup))
     .filter(Boolean);
 
   return { title, intro, items };
@@ -199,37 +198,28 @@ function hasDetailedFeedback(html) {
     .trim()
     .toLowerCase();
 
+  return text.length > 40;
+}
+
+function renderSolutionDetails(text) {
   if (!text) {
-    return false;
+    return "";
   }
 
-  return (
-    text.length > 120 ||
-    text.includes("hinweis") ||
-    text.includes("minute") ||
-    text.includes("excel") ||
-    text.includes("muster") ||
-    html.includes("Wirisformula")
-  );
+  return `
+    <details class="solution-details">
+      <summary>Musterlösung anzeigen</summary>
+      <pre>${escapeHtml(text)}</pre>
+    </details>
+  `;
 }
 
-function buildFallbackFeedback(question, meta) {
+function buildFallbackFeedback(question) {
   const solution = formatSolution(question);
-  const solutionHtml = solution
-    ? `<p><strong>Richtige Lösung:</strong> ${solution}</p>`
-    : "";
-  const solutionLink =
-    meta.solutionHref && meta.solutionLabel
-      ? `<p><a href="${meta.solutionHref}" target="_blank">${meta.solutionLabel}</a></p>`
-      : "";
-  const note = meta.solutionHref
-    ? "<p>Den vollständigen Lösungsweg finden Sie in der verlinkten Musterlösung.</p>"
-    : "<p>Für diese Aufgabe enthält der Blackboard-Export keinen ausführlichen Rechenweg. Der korrekte Zielwert steht oben.</p>";
-
-  return `<p>Ihre Antwort ist leider falsch.</p>${solutionHtml}${note}${solutionLink}`;
+  return solution ? `<p><strong>Richtiger Wert:</strong> ${solution}</p>` : "";
 }
 
-function evaluateAnswer(question, rawValue, meta) {
+function evaluateAnswer(question, rawValue) {
   const normalized = rawValue.trim().replace(/\s+/g, "").replace(",", ".");
   const numeric = Number.parseFloat(normalized);
   if (!Number.isFinite(numeric)) {
@@ -252,24 +242,25 @@ function evaluateAnswer(question, rawValue, meta) {
   if (ok) {
     return {
       ok: true,
-      html: question.correctFeedback || "<p>Ihre Antwort ist korrekt.</p>",
+      html: "<p>Richtig.</p>",
       kind: "success",
     };
   }
 
-  const fallback = buildFallbackFeedback(question, meta);
-  const incorrectHtml = hasDetailedFeedback(question.incorrectFeedback)
-    ? question.incorrectFeedback
-    : fallback;
+  const detailHtml = renderSolutionDetails(question.solutionText);
+  const hintHtml =
+    !question.solutionText && hasDetailedFeedback(question.incorrectFeedback)
+      ? question.incorrectFeedback
+      : buildFallbackFeedback(question);
 
   return {
     ok: false,
-    html: incorrectHtml,
+    html: `<p>Falsch.</p>${hintHtml}${detailHtml}`,
     kind: "error",
   };
 }
 
-function renderQuestion(question, index, meta) {
+function renderQuestion(question, index) {
   const article = document.createElement("article");
   article.className = "question-card";
 
@@ -290,7 +281,7 @@ function renderQuestion(question, index, meta) {
   const feedback = article.querySelector(".feedback");
 
   function check() {
-    const result = evaluateAnswer(question, input.value, meta);
+    const result = evaluateAnswer(question, input.value);
     feedback.className = `feedback is-visible ${
       result.kind === "success" ? "feedback-success" : "feedback-error"
     }`;
@@ -324,9 +315,7 @@ function renderExerciseSet(meta, data) {
   `;
 
   const list = panel.querySelector(".question-list");
-  data.items.forEach((question, index) =>
-    list.appendChild(renderQuestion(question, index, meta))
-  );
+  data.items.forEach((question, index) => list.appendChild(renderQuestion(question, index)));
 }
 
 async function loadExerciseSet(meta, button) {
@@ -343,12 +332,17 @@ async function loadExerciseSet(meta, button) {
   });
 
   try {
-    const response = await fetch(meta.file);
+    const [response, solutionData] = await Promise.all([
+      fetch(meta.file),
+      solutionDataPromise,
+    ]);
     if (!response.ok) {
       throw new Error("fetch failed");
     }
+
     const xmlText = await response.text();
-    const data = parseExerciseXml(xmlText);
+    const solutionLookup = solutionData[meta.id] || {};
+    const data = parseExerciseXml(xmlText, solutionLookup);
     renderExerciseSet(meta, data);
   } catch (error) {
     panel.innerHTML = `
