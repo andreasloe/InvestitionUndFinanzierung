@@ -173,7 +173,9 @@ function normalizeMathSyntax(value) {
     .replace(/\\frac\\partial\s*L\\partial\s*C_1/g, "\\\\frac{\\\\partial L}{\\\\partial C_1}")
     .replace(/\\frac\\partial\s*L\\partial\s*\\lambda/g, "\\\\frac{\\\\partial L}{\\\\partial \\\\lambda}")
     .replace(/\\fracC_1\(1\+i\)/g, "\\\\frac{C_1}{(1+i)}")
-    .replace(/\\frac([0-9][0-9.,]*)(\([^)]+\)(?:\^[^\s.]+)?)/g, "\\\\frac{$1}{$2}")
+    .replace(/\\frac([0-9][0-9.,]*)\(([^)]+)\)(\^[0-9]+)?/g, (_m, num, inner, exp = "") => {
+      return `\\\\frac{${num}}{(${inner})${exp}}`;
+    })
     .replace(/\\frac(-?\d)(-?\d)(?![\d{])/g, "\\\\frac{$1}{$2}")
     .replace(/\^\s*\\frac(-?\d)(-?\d)(?![\d{])/g, "^\\\\frac{$1}{$2}")
     .replace(/\\sqrt\[([^\]]+)\]([A-Za-z0-9.,]+)/g, "\\\\sqrt[$1]{$2}")
