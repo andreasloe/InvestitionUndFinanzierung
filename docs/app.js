@@ -348,6 +348,19 @@ function renderSolutionTable(lines) {
   `;
 }
 
+function renderTextWithInlineMath(line) {
+  const prepared = normalizeMinusSigns(line);
+  const parts = prepared.split(/(\$[^$]+\$)/g).filter(Boolean);
+  return parts
+    .map((part) => {
+      if (part.startsWith("$") && part.endsWith("$")) {
+        return escapeHtml(part);
+      }
+      return escapeHtml(part);
+    })
+    .join("");
+}
+
 function formatSolutionMarkup(text) {
   const lines = text
     .split(/\n+/)
@@ -369,12 +382,29 @@ function formatSolutionMarkup(text) {
       continue;
     }
 
-    const escaped = escapeHtml(line);
+    const subtaskMatch = line.match(/^([a-z]\))\s*(.+)$/i);
+    if (subtaskMatch && isFormulaLine(subtaskMatch[2])) {
+      const mathBody = prepareCellMath(subtaskMatch[2]);
+      const math =
+        mathBody.startsWith("$") || mathBody.startsWith("\\[")
+          ? escapeHtml(mathBody)
+          : `\\(${escapeHtml(mathBody)}\\)`;
+      chunks.push(
+        `<p class="solution-line"><strong>${escapeHtml(subtaskMatch[1])}</strong> <span class="solution-line-math">${math}</span></p>`
+      );
+      index += 1;
+      continue;
+    }
+
     if (isFormulaLine(line)) {
-      const math = line.startsWith("$") || line.startsWith("\\[") ? escaped : `\\[${escaped}\\]`;
+      const prepared = prepareCellMath(line);
+      const math =
+        prepared.startsWith("$") || prepared.startsWith("\\[")
+          ? escapeHtml(prepared)
+          : `\\[${escapeHtml(prepared)}\\]`;
       chunks.push(`<div class="solution-line solution-line-math">${math}</div>`);
     } else {
-      chunks.push(`<p class="solution-line">${escaped}</p>`);
+      chunks.push(`<p class="solution-line">${renderTextWithInlineMath(line)}</p>`);
     }
     index += 1;
   }
