@@ -464,15 +464,20 @@ function isFormulaLine(line) {
     return false;
   }
 
+  if (
+    /\\frac|\\cdot|\\sqrt|\\ln|\\Longrightarrow|\\rightarrow|\\mathrm|\\text|\\sum|\\approx/.test(
+      value
+    )
+  ) {
+    return true;
+  }
+
   const proseRemainder = value.replace(/\$[^$]*\$/g, "").trim();
   if (proseRemainder && /[A-Za-zÄÖÜäöü]/.test(proseRemainder)) {
     return false;
   }
 
   return (
-    /\\frac|\\cdot|\\sqrt|\\ln|\\Longrightarrow|\\rightarrow|\\mathrm|\\text|\\sum|\\approx/.test(
-      value
-    ) ||
     /[=_^]/.test(value) ||
     value.startsWith("$") ||
     value.endsWith("$")
