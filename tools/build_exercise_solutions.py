@@ -77,33 +77,50 @@ def extract_solution_items(block: str) -> dict[str, str]:
 
 def clean_solution_text(text: str) -> str:
     substitutions = {
-        r"\euro{}": "€",
-        r"\%": "%",
+        r"\euro{}": r"\text{€}",
+        r"\%": r"\%",
         r"\,": " ",
         r"\;": " ",
         r"\:": " ",
         r"\quad": " ",
         r"\qquad": " ",
         r"\newline": "\n",
+        r"\medskip": "\n",
+        r"\centering": "\n",
+        r"\gray": "",
+        r"\black": "",
+        r"\Stt": "",
+        r"\I_": "I_",
+        r"\NPV": r"\mathrm{NPV}",
         "~": " ",
         "\\\\": "\n",
     }
 
     text = re.sub(r"%.*", "", text)
+    text = re.sub(r"\\(newpage|clearpage)\b", "", text)
+    text = re.sub(r"\\vspace\*?\{[^}]*\}", "", text)
     text = re.sub(r"\\label\{[^}]+\}", "", text)
     text = re.sub(r"\\ref\{([^}]+)\}", r"[\1]", text)
     text = re.sub(r"\\href\{([^}]+)\}\{([^}]+)\}", r"\2 (\1)", text)
     text = re.sub(r"\\includegraphics(?:\[[^\]]*\])?\s*\{([^}]+)\}", r"[Abbildung: \1]", text)
+    text = re.sub(r"\\caption\{[^}]+\}", "", text)
+    text = re.sub(r"\\begin\{figure\}(?:\[[^\]]*\])?", "", text)
+    text = re.sub(r"\\end\{figure\}", "", text)
+    text = re.sub(r"\\begin\{tabular\}\{[^}]*\}", "", text)
+    text = re.sub(r"\\end\{tabular\}", "", text)
     text = re.sub(r"\\begin\{[^}]+\}", "", text)
     text = re.sub(r"\\end\{[^}]+\}", "", text)
     text = re.sub(r"\\item\[([^\]]+)\]", r"\n\1 ", text)
     text = re.sub(r"\\(textit|emph|textbf)\{", "{", text)
+    text = re.sub(r"^\s*\[[a-z]{1,3}\]\s*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^\s*[clr|]+\s*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^\s*\\hline\s*$", "", text, flags=re.MULTILINE)
 
     for old, new in substitutions.items():
         text = text.replace(old, new)
 
-    text = text.replace("{", "").replace("}", "")
     text = re.sub(r"\n{3,}", "\n\n", text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
     text = re.sub(r"[ \t]+\n", "\n", text)
     text = re.sub(r"\n[ \t]+", "\n", text)
     return text.strip()

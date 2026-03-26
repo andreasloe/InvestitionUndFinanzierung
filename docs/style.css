@@ -576,6 +576,22 @@ a:hover {
   line-height: 1.7;
 }
 
+.solution-line {
+  margin: 0 0 0.75rem;
+}
+
+.solution-line:last-child {
+  margin-bottom: 0;
+}
+
+.solution-line-math {
+  overflow-x: auto;
+}
+
+.solution-line-math mjx-container[display="true"] {
+  margin: 0.2rem 0;
+}
+
 .solution-content mjx-container {
   margin: 0 0.2rem;
 }

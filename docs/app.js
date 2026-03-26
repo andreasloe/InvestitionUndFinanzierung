@@ -207,17 +207,51 @@ function hasDetailedFeedback(html) {
   return text.length > 40;
 }
 
+function isFormulaLine(line) {
+  const value = line.trim();
+  if (!value) {
+    return false;
+  }
+
+  if (/^\[[^\]]+\]$/.test(value)) {
+    return false;
+  }
+
+  return (
+    /\\frac|\\cdot|\\sqrt|\\ln|\\Longrightarrow|\\rightarrow|\\mathrm|\\text|\\sum|\\approx/.test(
+      value
+    ) ||
+    /[=_^]/.test(value) ||
+    value.startsWith("$") ||
+    value.endsWith("$")
+  );
+}
+
+function formatSolutionMarkup(text) {
+  return text
+    .split(/\n+/)
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const escaped = escapeHtml(line);
+      if (isFormulaLine(line)) {
+        const math = line.startsWith("$") || line.startsWith("\\[") ? escaped : `\\[${escaped}\\]`;
+        return `<div class="solution-line solution-line-math">${math}</div>`;
+      }
+      return `<p class="solution-line">${escaped}</p>`;
+    })
+    .join("");
+}
+
 function renderSolutionDetails(text) {
   if (!text) {
     return "";
   }
 
-  const formatted = escapeHtml(text).replace(/\n/g, "<br />");
-
   return `
     <details class="solution-details">
       <summary>Musterlösung anzeigen</summary>
-      <div class="solution-content">${formatted}</div>
+      <div class="solution-content">${formatSolutionMarkup(text)}</div>
     </details>
   `;
 }
