@@ -189,21 +189,21 @@ function splitLooseNumberPair(value) {
 function normalizeLooseFractions(value) {
   let output = value || "";
 
-  output = output.replace(/\\frac\\ln\(([^)]+)\)\\ln\(([^)]+)\)/g, "\\\\frac{\\\\ln($1)}{\\\\ln($2)}");
+  output = output.replace(/\\frac\\ln\(([^)]+)\)\\ln\(([^)]+)\)/g, "\\frac{\\ln($1)}{\\ln($2)}");
 
   output = output.replace(/\\frac(?!\{)([0-9][0-9.,]*)/g, (match, rawPair) => {
     const split = splitLooseNumberPair(rawPair);
-    return split ? `\\\\frac{${split[0]}}{${split[1]}}` : match;
+    return split ? `\\frac{${split[0]}}{${split[1]}}` : match;
   });
 
   output = output.replace(
     /\\frac(?!\{)([0-9]+(?:\.[0-9]{3})*(?:,[0-9]+)?)(1\+\d+\\%)/g,
-    "\\\\frac{$1}{$2}"
+    "\\frac{$1}{$2}"
   );
 
   output = output.replace(
     /\\frac(?!\{)\(([^)]+)\)\^(\d+)-1([0-9]+(?:[.,][0-9]+)?)\\cdot\s*\(([^)]+)\)\^(\d+)/g,
-    "\\\\frac{($1)^$2-1}{$3\\cdot ($4)^$5}"
+    "\\frac{($1)^$2-1}{$3\\cdot ($4)^$5}"
   );
 
   output = output.replace(
@@ -213,22 +213,22 @@ function normalizeLooseFractions(value) {
 
   output = output.replace(
     /\\frac(?!\{)(i)(q\^n)(q\^n-1)/g,
-    "\\\\frac{$1\\cdot $2}{$3}"
+    "\\frac{$1\\cdot $2}{$3}"
   );
 
   output = output.replace(
     /\\frac(?!\{)([0-9]+(?:[.,][0-9]+)?)\\cdot\s*([0-9]+(?:[.,][0-9]+)?\^\d+)([0-9]+(?:[.,][0-9]+)?\^\d+-1)/g,
-    "\\\\frac{$1\\cdot $2}{$3}"
+    "\\frac{$1\\cdot $2}{$3}"
   );
 
   output = output.replace(
     /\\frac(?!\{)\((1\+[0-9.,]+)\)\^(\d+)-1([0-9.,]+)\\cdot\s*\((1\+[0-9.,]+)\)\^(\d+)/g,
-    "\\\\frac{($1)^$2-1}{$3\\cdot ($4)^$5}"
+    "\\frac{($1)^$2-1}{$3\\cdot ($4)^$5}"
   );
 
   output = output.replace(
     /\\frac(?!\{)([0-9.,]+)(\([^)]+\)\^\d+)\s*(\([^)]+\)\^\d+-1)/g,
-    "\\\\frac{$1$2}{$3}"
+    "\\frac{$1$2}{$3}"
   );
 
   return output;
@@ -236,25 +236,25 @@ function normalizeLooseFractions(value) {
 
 function normalizeMathSyntax(value) {
   return normalizeLooseFractions(value || "")
-    .replace(/\\text([A-Za-zÄÖÜäöüß]+)/g, "\\\\text{$1}")
-    .replace(/\^\\text\{([^}]+)\}/g, "^{\\\\text{$1}}")
-    .replace(/\\bar\{([A-Za-z])_([0-9])\}/g, "\\\\bar{$1}_$2")
-    .replace(/\\bar([A-Za-z])_([0-9])/g, "\\\\bar{$1}_$2")
-    .replace(/\\bar([A-Za-z])/g, "\\\\bar{$1}")
-    .replace(/\\frac\\partial\s*L\\partial\s*C_0/g, "\\\\frac{\\\\partial L}{\\\\partial C_0}")
-    .replace(/\\frac\\partial\s*L\\partial\s*C_1/g, "\\\\frac{\\\\partial L}{\\\\partial C_1}")
-    .replace(/\\frac\\partial\s*L\\partial\s*\\lambda/g, "\\\\frac{\\\\partial L}{\\\\partial \\\\lambda}")
-    .replace(/\\fracC_1\(1\+i\)/g, "\\\\frac{C_1}{(1+i)}")
+    .replace(/\\text([A-Za-zÄÖÜäöüß]+)/g, "\\text{$1}")
+    .replace(/\^\\text\{([^}]+)\}/g, "^{\\text{$1}}")
+    .replace(/\\bar\{([A-Za-z])_([0-9])\}/g, "\\bar{$1}_$2")
+    .replace(/\\bar([A-Za-z])_([0-9])/g, "\\bar{$1}_$2")
+    .replace(/\\bar([A-Za-z])/g, "\\bar{$1}")
+    .replace(/\\frac\\partial\s*L\\partial\s*C_0/g, "\\frac{\\partial L}{\\partial C_0}")
+    .replace(/\\frac\\partial\s*L\\partial\s*C_1/g, "\\frac{\\partial L}{\\partial C_1}")
+    .replace(/\\frac\\partial\s*L\\partial\s*\\lambda/g, "\\frac{\\partial L}{\\partial \\lambda}")
+    .replace(/\\fracC_1\(1\+i\)/g, "\\frac{C_1}{(1+i)}")
     .replace(/\\frac([0-9][0-9.,]*)\(([^)]+)\)(\^[0-9]+)?/g, (_m, num, inner, exp = "") => {
-      return `\\\\frac{${num}}{(${inner})${exp}}`;
+      return `\\frac{${num}}{(${inner})${exp}}`;
     })
-    .replace(/\\frac(-?\d)(-?\d)(?![\d{])/g, "\\\\frac{$1}{$2}")
-    .replace(/\^\s*\\frac(-?\d)(-?\d)(?![\d{])/g, "^\\\\frac{$1}{$2}")
-    .replace(/\\sqrt\[([^\]]+)\]\\frac\{([^}]+)\}\{([^}]+)\}/g, "\\\\sqrt[$1]{\\\\frac{$2}{$3}}")
-    .replace(/\\sqrt\[([^\]]+)\](\\frac\{[^}]+\}\{[^}]+\})/g, "\\\\sqrt[$1]{$2}")
-    .replace(/\\sqrt\[([^\]]+)\]([A-Za-z0-9.,]+)/g, "\\\\sqrt[$1]{$2}")
-    .replace(/\\sqrt([A-Za-z0-9.,]+)/g, "\\\\sqrt{$1}")
-    .replace(/\\lambda/g, "\\\\lambda");
+    .replace(/\\frac(-?\d)(-?\d)(?![\d{])/g, "\\frac{$1}{$2}")
+    .replace(/\^\s*\\frac(-?\d)(-?\d)(?![\d{])/g, "^\\frac{$1}{$2}")
+    .replace(/\\sqrt\[([^\]]+)\]\\frac\{([^}]+)\}\{([^}]+)\}/g, "\\sqrt[$1]{\\frac{$2}{$3}}")
+    .replace(/\\sqrt\[([^\]]+)\](\\frac\{[^}]+\}\{[^}]+\})/g, "\\sqrt[$1]{$2}")
+    .replace(/\\sqrt\[([^\]]+)\]([A-Za-z0-9.,]+)/g, "\\sqrt[$1]{$2}")
+    .replace(/\\sqrt([A-Za-z0-9.,]+)/g, "\\sqrt{$1}")
+    .replace(/\\lambda/g, "\\lambda");
 }
 
 function prepareCellMath(value) {
