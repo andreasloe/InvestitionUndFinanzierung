@@ -256,13 +256,39 @@ function extractSubtaskSolution(solutionText, letter) {
   return found ? found.text : solutionText;
 }
 
-function parseQuestion(item, solutionLookup) {
+function questionOverride(setId, title) {
+  if (setId === "set3") {
+    if (title === "Aufgabe 6b" || title === "Aufgabe 6c") {
+      return { skip: true };
+    }
+
+    if (title === "Aufgabe 6d") {
+      return {
+        title: "Aufgabe 6b",
+        solutionLetter: "b",
+      };
+    }
+  }
+
+  return {
+    title,
+    solutionLetter: null,
+  };
+}
+
+function parseQuestion(item, solutionLookup, setId) {
   const type = item.querySelector("bbmd_questiontype")?.textContent?.trim() || "";
   if (type !== "Numeric") {
     return null;
   }
 
-  const title = item.getAttribute("title") || "Aufgabe";
+  const sourceTitle = item.getAttribute("title") || "Aufgabe";
+  const override = questionOverride(setId, sourceTitle);
+  if (override.skip) {
+    return null;
+  }
+
+  const title = override.title || sourceTitle;
   const prompt = textOrHtml(item, "presentation mat_formattedtext");
   const incorrectFeedback = textOrHtml(
     item,
@@ -294,11 +320,17 @@ function parseQuestion(item, solutionLookup) {
     return null;
   }
 
-  const questionKey = normalizeQuestionKey(title);
-  const subtaskMatch = title.match(/Aufgabe\s+\d+([a-z])$/i);
+  const questionKey = normalizeQuestionKey(sourceTitle);
+  const subtaskMatch =
+    override.solutionLetter
+      ? [null, override.solutionLetter]
+      : sourceTitle.match(/Aufgabe\s+\d+([a-z])$/i);
   let solutionText = solutionLookup[questionKey] || "";
   if (subtaskMatch && solutionText) {
     solutionText = extractSubtaskSolution(solutionText, subtaskMatch[1]);
+  }
+  if (normalizeQuestionKey(title) === "Aufgabe 6" && solutionText) {
+    solutionText = solutionText.replace(/\\bar\{?C\}?_0/g, "C_0");
   }
 
   return {
@@ -312,13 +344,13 @@ function parseQuestion(item, solutionLookup) {
   };
 }
 
-function parseExerciseXml(xmlText, solutionLookup) {
+function parseExerciseXml(xmlText, solutionLookup, setId) {
   const parser = new DOMParser();
   const xml = parser.parseFromString(xmlText, "application/xml");
   const title = xml.querySelector("assessment")?.getAttribute("title") || "Aufgabenset";
   const intro = textOrHtml(xml, "presentation_material mat_formattedtext");
   const items = [...xml.querySelectorAll("section > item")]
-    .map((item) => parseQuestion(item, solutionLookup))
+    .map((item) => parseQuestion(item, solutionLookup, setId))
     .filter(Boolean);
 
   return { title, intro, items };
@@ -567,14 +599,13 @@ function evaluateAnswer(question, rawValue) {
   };
 }
 
-function renderQuestion(question, index) {
+function renderQuestion(question) {
   const article = document.createElement("article");
   article.className = "question-card";
 
   const promptHtml = question.prompt || "<p>Keine Aufgabenstellung verfügbar.</p>";
   article.innerHTML = `
-    <span class="question-number">Aufgabe ${index + 1}</span>
-    <h4>${question.title}</h4>
+    <span class="question-number">${question.title}</span>
     <div class="question-body">${promptHtml}</div>
     <div class="answer-row">
       <input type="text" inputmode="decimal" aria-label="${question.title}" placeholder="Antwort eingeben" />
@@ -626,7 +657,7 @@ function renderExerciseSet(meta, data) {
   `;
 
   const list = panel.querySelector(".question-list");
-  data.items.forEach((question, index) => list.appendChild(renderQuestion(question, index)));
+  data.items.forEach((question) => list.appendChild(renderQuestion(question)));
   renderMath(panel);
 }
 
@@ -654,7 +685,7 @@ async function loadExerciseSet(meta, button) {
 
     const xmlText = await response.text();
     const solutionLookup = solutionData[meta.id] || {};
-    const data = parseExerciseXml(xmlText, solutionLookup);
+    const data = parseExerciseXml(xmlText, solutionLookup, meta.id);
     renderExerciseSet(meta, data);
   } catch (error) {
     panel.innerHTML = `
