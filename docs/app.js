@@ -96,11 +96,6 @@ const embeddedImageReplacements = {
   "xid-19619314_2": "$\\bar{C_0}$",
 };
 
-const embeddedAssetReplacements = {
-  "xid-19619316_2": "./lectures/03_fisher.pdf",
-  "xid-19619317_2": "./assets/thumb-fisher.png",
-};
-
 function preprocessEmbeddedReferences(html) {
   let output = decodeHtmlEntities(html || "");
 
@@ -112,16 +107,10 @@ function preprocessEmbeddedReferences(html) {
     );
   });
 
-  Object.entries(embeddedAssetReplacements).forEach(([xid, target]) => {
-    output = output.replace(
-      new RegExp(`href="[^"]*${xid}[^"]*"`, "gi"),
-      `href="${target}"`
-    );
-    output = output.replace(
-      new RegExp(`<img([^>]*)src="[^"]*${xid}[^"]*"([^>]*)>`, "gi"),
-      `<img$1src="${target}" class="embedded-figure"$2>`
-    );
-  });
+  output = output.replace(
+    /<p>\s*<a[^>]*href="[^"]*xid-19619316_2[^"]*"[^>]*>\s*<img[^>]*xid-19619317_2[^>]*>\s*<\/a>\s*<\/p>/gi,
+    '<p class="figure-note">Die zugehörige Grafik war im Blackboard-Export nicht enthalten.</p>'
+  );
 
   output = output.replace(
     /<img[^>]*@X@EmbeddedFile\.requestUrlStub@X@[^>]*>/gi,
@@ -167,13 +156,6 @@ function rewriteEmbeddedImage(node) {
   const src = node.getAttribute("src") || "";
   const match = src.match(/xid-\d+_\d+/);
   const replacement = match ? embeddedImageReplacements[match[0]] : "";
-  if (!replacement && match && embeddedAssetReplacements[match[0]]) {
-    node.setAttribute("src", embeddedAssetReplacements[match[0]]);
-    node.classList.add("embedded-figure");
-    node.setAttribute("alt", "Abbildung aus den Folien");
-    return;
-  }
-
   if (!replacement) {
     if (src.includes("@X@EmbeddedFile.requestUrlStub@X@")) {
       node.remove();
@@ -202,10 +184,7 @@ function cleanHtml(html, options = {}) {
     template.content.querySelectorAll("img").forEach((node) => rewriteEmbeddedImage(node));
     template.content.querySelectorAll("a").forEach((node) => {
       const href = node.getAttribute("href") || "";
-      const match = href.match(/xid-\d+_\d+/);
-      if (match && embeddedAssetReplacements[match[0]]) {
-        node.setAttribute("href", embeddedAssetReplacements[match[0]]);
-      } else if (href.includes("@X@EmbeddedFile.requestUrlStub@X@")) {
+      if (href.includes("@X@EmbeddedFile.requestUrlStub@X@")) {
         node.removeAttribute("href");
       }
     });
@@ -214,12 +193,10 @@ function cleanHtml(html, options = {}) {
   template.content.querySelectorAll("*").forEach((node) => {
     [...node.attributes].forEach((attr) => {
       const name = attr.name.toLowerCase();
-      const preserveEmbeddedFigureClass =
-        name === "class" && node.classList.contains("embedded-figure");
       if (
         name === "style" ||
         name.startsWith("on") ||
-        ((name === "class" || name === "id") && !preserveEmbeddedFigureClass)
+        (name === "class" || name === "id")
       ) {
         node.removeAttribute(attr.name);
       }

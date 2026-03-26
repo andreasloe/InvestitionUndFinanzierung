@@ -498,13 +498,13 @@ a:hover {
   height: auto;
 }
 
-.question-body img.embedded-figure {
-  display: block;
-  margin: 1rem auto;
-  max-width: min(32rem, 100%);
-  border: 1px solid rgba(18, 65, 112, 0.14);
+.question-body .figure-note {
+  margin: 0.85rem 0 1rem;
+  padding: 0.85rem 1rem;
   border-radius: 0.85rem;
-  background: white;
+  background: rgba(18, 65, 112, 0.06);
+  color: rgba(18, 65, 112, 0.78);
+  font-size: 0.98rem;
 }
 
 .answer-row {
