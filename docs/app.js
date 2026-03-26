@@ -369,6 +369,9 @@ function renderQuestion(question, index) {
       <button type="button">Prüfen</button>
     </div>
     <div class="feedback"></div>
+    <div class="question-footer">
+      <a class="question-backlink" href="#uebungen">Zurück zum Anfang der Übungen</a>
+    </div>
   `;
 
   const input = article.querySelector("input");

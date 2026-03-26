@@ -554,6 +554,17 @@ a:hover {
   margin: 0;
 }
 
+.question-footer {
+  margin-top: 0.95rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(18, 65, 112, 0.1);
+}
+
+.question-backlink {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
 .solution-details {
   margin-top: 0.85rem;
   border-top: 1px solid rgba(18, 65, 112, 0.12);
