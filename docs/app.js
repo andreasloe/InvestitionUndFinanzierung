@@ -774,6 +774,9 @@ async function loadExerciseSet(meta, button) {
 
 function renderExerciseList() {
   const container = document.getElementById("exercise-list");
+  if (!container || container.children.length) {
+    return;
+  }
 
   exerciseSets.forEach((meta, index) => {
     const button = document.createElement("button");
@@ -788,4 +791,8 @@ function renderExerciseList() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", renderExerciseList);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", renderExerciseList, { once: true });
+} else {
+  renderExerciseList();
+}
