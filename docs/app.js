@@ -89,6 +89,46 @@ function renderMath(container) {
   }
 }
 
+const embeddedImageReplacements = {
+  "xid-19619306_2": "$U(C_0,C_1)= C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}$",
+  "xid-19619307_2": "$\\bar{C_0}=C_0+X_0$",
+  "xid-19619308_2": "$C_1=(1+i)\\cdot X_0$",
+  "xid-19619314_2": "$\\bar{C_0}$",
+};
+
+function normalizeMinusSigns(value) {
+  return (value || "")
+    .replace(/([A-Za-zÄÖÜäöü])--([A-Za-zÄÖÜäöü])/g, "$1-$2")
+    .replace(/(^|[|(=\s])--(?=\d)/g, "$1-")
+    .replace(/(^|[|(=\s])-\s+(?=\d)/g, "$1-");
+}
+
+function prepareCellMath(value) {
+  return normalizeMinusSigns(value)
+    .replace(/\$\s*/g, "$")
+    .replace(/\s*\$/g, "$")
+    .trim();
+}
+
+function renderCellContent(value) {
+  const prepared = prepareCellMath(value);
+  return escapeHtml(prepared);
+}
+
+function rewriteEmbeddedImage(node) {
+  const src = node.getAttribute("src") || "";
+  const match = src.match(/xid-\d+_\d+/);
+  const replacement = match ? embeddedImageReplacements[match[0]] : "";
+  if (!replacement) {
+    return;
+  }
+
+  const span = document.createElement("span");
+  span.className = "inline-formula";
+  span.textContent = replacement;
+  node.replaceWith(span);
+}
+
 function cleanHtml(html, options = {}) {
   const decoded = decodeHtmlEntities(html || "");
   const template = document.createElement("template");
@@ -100,6 +140,10 @@ function cleanHtml(html, options = {}) {
   }
 
   template.content.querySelectorAll(selectors.join(", ")).forEach((node) => node.remove());
+
+  if (!options.removeImages) {
+    template.content.querySelectorAll("img").forEach((node) => rewriteEmbeddedImage(node));
+  }
 
   template.content.querySelectorAll("*").forEach((node) => {
     [...node.attributes].forEach((attr) => {
@@ -237,11 +281,23 @@ function isTableLine(line) {
   return value.includes("|") && !value.startsWith("[");
 }
 
+function isStandaloneHeaderRow(cells, headerLength) {
+  if (!cells.length || cells.length >= headerLength) {
+    return false;
+  }
+
+  return cells.every((cell) => /^\$?\s*t\s*=/.test(prepareCellMath(cell)));
+}
+
 function renderSolutionTable(lines) {
   const rows = [];
 
   lines.forEach((line) => {
-    const cells = line.split("|").map((cell) => cell.trim()).filter(Boolean);
+    const cells = line
+      .split("|")
+      .map((cell) => cell.trim())
+      .filter(Boolean)
+      .map((cell) => prepareCellMath(cell));
 
     if (line.trim().startsWith("|") && cells.length === 1 && rows.length) {
       rows[rows.length - 1].push(cells[0]);
@@ -259,19 +315,31 @@ function renderSolutionTable(lines) {
     return "";
   }
 
-  const header = rows[0];
-  const body = rows.slice(1);
+  let header = [...rows[0]];
+  let startIndex = 1;
+
+  if (rows[1] && isStandaloneHeaderRow(rows[1], header.length)) {
+    header = header.concat(rows[1]);
+    startIndex = 2;
+  }
+
+  const body = rows.slice(startIndex).map((row) => {
+    if (row.length < header.length) {
+      return row.concat(Array.from({ length: header.length - row.length }, () => ""));
+    }
+    return row;
+  });
 
   return `
     <div class="solution-table-wrap">
       <table class="solution-table">
         <thead>
-          <tr>${header.map((cell) => `<th>${escapeHtml(cell)}</th>`).join("")}</tr>
+          <tr>${header.map((cell) => `<th>${renderCellContent(cell)}</th>`).join("")}</tr>
         </thead>
         <tbody>
           ${body
             .map(
-              (row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`
+              (row) => `<tr>${row.map((cell) => `<td>${renderCellContent(cell)}</td>`).join("")}</tr>`
             )
             .join("")}
         </tbody>
@@ -395,6 +463,8 @@ function renderQuestion(question, index) {
   const input = article.querySelector("input");
   const button = article.querySelector("button");
   const feedback = article.querySelector(".feedback");
+
+  renderMath(article);
 
   function check() {
     const result = evaluateAnswer(question, input.value);
