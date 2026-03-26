@@ -166,14 +166,17 @@ function normalizeMinusSigns(value) {
 
 function normalizeMathSyntax(value) {
   return (value || "")
+    .replace(/\\text([A-Za-zÄÖÜäöüß]+)/g, "\\\\text{$1}")
     .replace(/\\bar([A-Za-z])_([0-9])/g, "\\\\bar{$1}_$2")
     .replace(/\\bar([A-Za-z])/g, "\\\\bar{$1}")
     .replace(/\\frac\\partial\s*L\\partial\s*C_0/g, "\\\\frac{\\\\partial L}{\\\\partial C_0}")
     .replace(/\\frac\\partial\s*L\\partial\s*C_1/g, "\\\\frac{\\\\partial L}{\\\\partial C_1}")
     .replace(/\\frac\\partial\s*L\\partial\s*\\lambda/g, "\\\\frac{\\\\partial L}{\\\\partial \\\\lambda}")
     .replace(/\\fracC_1\(1\+i\)/g, "\\\\frac{C_1}{(1+i)}")
+    .replace(/\\frac([0-9][0-9.,]*)(\([^)]+\)(?:\^[^\s.]+)?)/g, "\\\\frac{$1}{$2}")
     .replace(/\\frac(-?\d)(-?\d)(?![\d{])/g, "\\\\frac{$1}{$2}")
     .replace(/\^\s*\\frac(-?\d)(-?\d)(?![\d{])/g, "^\\\\frac{$1}{$2}")
+    .replace(/\\sqrt\[([^\]]+)\]([A-Za-z0-9.,]+)/g, "\\\\sqrt[$1]{$2}")
     .replace(/\\lambda/g, "\\\\lambda");
 }
 
