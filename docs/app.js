@@ -502,7 +502,6 @@ function renderSolutionTable(lines) {
   });
 
   if (!rows.length) {
-  if (!target) {
     return "";
   }
 
@@ -550,8 +549,6 @@ function renderTextWithInlineMath(line) {
       return escapeHtml(part);
     })
     .join("");
-  const raw = target.innerHTML && target.innerHTML.trim() ? target.innerHTML : target.textContent;
-  return cleanHtml(raw || "", options);
 }
 
 function formatSolutionMarkup(text) {
