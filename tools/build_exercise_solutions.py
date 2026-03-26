@@ -76,6 +76,24 @@ def extract_solution_items(block: str) -> dict[str, str]:
 
 
 def clean_solution_text(text: str) -> str:
+    def format_tabular(match: re.Match[str]) -> str:
+        body = match.group(1)
+        rows: list[str] = []
+
+        for raw_line in body.splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("%"):
+                continue
+            line = line.replace(r"\hline", "")
+            parts = [part.strip() for part in line.split(r"\\") if part.strip()]
+            for part in parts:
+                part = re.sub(r"\s*&\s*", " | ", part)
+                part = re.sub(r"\s{2,}", " ", part)
+                if part:
+                    rows.append(part)
+
+        return "\n" + "\n".join(rows) + "\n"
+
     substitutions = {
         r"\euro{}": r"\text{€}",
         r"\%": r"\%",
@@ -97,6 +115,12 @@ def clean_solution_text(text: str) -> str:
     }
 
     text = re.sub(r"(?<!\\)%.*", "", text)
+    text = re.sub(
+        r"\\begin\{tabular\}\{[^}]*\}(.*?)\\end\{tabular\}",
+        format_tabular,
+        text,
+        flags=re.DOTALL,
+    )
     text = re.sub(r"\\(newpage|clearpage)\b", "", text)
     text = re.sub(r"\\vspace\*?\{[^}]*\}", "", text)
     text = re.sub(r"\\vspace-?[0-9.,]+[a-zA-Z]+", "", text)
@@ -107,8 +131,6 @@ def clean_solution_text(text: str) -> str:
     text = re.sub(r"\\caption\{[^}]+\}", "", text)
     text = re.sub(r"\\begin\{figure\}(?:\[[^\]]*\])?", "", text)
     text = re.sub(r"\\end\{figure\}", "", text)
-    text = re.sub(r"\\begin\{tabular\}\{[^}]*\}", "", text)
-    text = re.sub(r"\\end\{tabular\}", "", text)
     text = re.sub(r"\\begin\{[^}]+\}", "", text)
     text = re.sub(r"\\end\{[^}]+\}", "", text)
     text = re.sub(r"\\item\[([^\]]+)\]", r"\n\1 ", text)
