@@ -592,6 +592,31 @@ a:hover {
   margin: 0.2rem 0;
 }
 
+.solution-table-wrap {
+  margin: 0.25rem 0 0.85rem;
+  overflow-x: auto;
+}
+
+.solution-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.98rem;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.solution-table th,
+.solution-table td {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid rgba(18, 65, 112, 0.14);
+  text-align: left;
+  vertical-align: top;
+}
+
+.solution-table th {
+  background: rgba(18, 65, 112, 0.08);
+  font-weight: 700;
+}
+
 .solution-content mjx-container {
   margin: 0 0.2rem;
 }

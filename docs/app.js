@@ -227,20 +227,73 @@ function isFormulaLine(line) {
   );
 }
 
+function isTableLine(line) {
+  const value = line.trim();
+  return value.includes("|") && !value.startsWith("[");
+}
+
+function renderSolutionTable(lines) {
+  const rows = lines
+    .map((line) => line.split("|").map((cell) => cell.trim()).filter(Boolean))
+    .filter((cells) => cells.length > 1);
+
+  if (!rows.length) {
+    return "";
+  }
+
+  const header = rows[0];
+  const body = rows.slice(1);
+
+  return `
+    <div class="solution-table-wrap">
+      <table class="solution-table">
+        <thead>
+          <tr>${header.map((cell) => `<th>${escapeHtml(cell)}</th>`).join("")}</tr>
+        </thead>
+        <tbody>
+          ${body
+            .map(
+              (row) => `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
 function formatSolutionMarkup(text) {
-  return text
+  const lines = text
     .split(/\n+/)
     .map((line) => line.trim())
-    .filter(Boolean)
-    .map((line) => {
-      const escaped = escapeHtml(line);
-      if (isFormulaLine(line)) {
-        const math = line.startsWith("$") || line.startsWith("\\[") ? escaped : `\\[${escaped}\\]`;
-        return `<div class="solution-line solution-line-math">${math}</div>`;
+    .filter(Boolean);
+
+  const chunks = [];
+
+  for (let index = 0; index < lines.length; ) {
+    const line = lines[index];
+
+    if (isTableLine(line)) {
+      const tableLines = [];
+      while (index < lines.length && isTableLine(lines[index])) {
+        tableLines.push(lines[index]);
+        index += 1;
       }
-      return `<p class="solution-line">${escaped}</p>`;
-    })
-    .join("");
+      chunks.push(renderSolutionTable(tableLines));
+      continue;
+    }
+
+    const escaped = escapeHtml(line);
+    if (isFormulaLine(line)) {
+      const math = line.startsWith("$") || line.startsWith("\\[") ? escaped : `\\[${escaped}\\]`;
+      chunks.push(`<div class="solution-line solution-line-math">${math}</div>`);
+    } else {
+      chunks.push(`<p class="solution-line">${escaped}</p>`);
+    }
+    index += 1;
+  }
+
+  return chunks.join("");
 }
 
 function renderSolutionDetails(text) {
