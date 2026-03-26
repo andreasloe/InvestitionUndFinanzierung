@@ -112,6 +112,14 @@ const solutionOverrides = {
     "Aufgabe 10":
       "R_0=55.000\\cdot\\frac{1,06^{20}-1}{0,06\\cdot 1,06^{20}}=630.845,67",
   },
+  set2: {
+    "Aufgabe 4":
+      "zuerst\n\n$K_8=200.000\\cdot 1,04^8=273.713,81$\n\ndann Rente\n\n$r=R_0\\frac{iq^n}{q^n-1}=273.713,81\\cdot\\frac{0,04\\cdot 1,04^{12}}{1,04^{12}-1}=29.164,80$",
+    "Aufgabe 6":
+      "Projekt B ist besser.\n\nProjekt A\nZeitpunkt | $t=0$ | $t=1$ | $t=2$\nBasiszahlungen $M_t$ | 1.000 |  | \nEntnahmen $C_t$ | 0 | 50 | 50\nCashflows $CF_t$ | -900 | 0 | 1.700\nZinsen $Z_t$ | 0 | $100\\cdot 15\\%=15$ | $65\\cdot 15\\%=9,75$\nKontostand $K_t$ | 100 | $100-50+15=65$ | 1.724,75\n\nProjekt B\nZeitpunkt | $t=0$ | $t=1$ | $t=2$\nBasiszahlungen $M_t$ | 1.000 |  | \nEntnahmen $C_t$ | 0 | 50 | 50\nCashflows $CF_t$ | -1.300 | 2.000 | \nZinsen $Z_t$ | 0 | $-300\\cdot 25\\%=-75$ | $1.575\\cdot 15\\%=236,25$\nKontostand $K_t$ | -300 | 1.575 | 1.761,25",
+    "Aufgabe 7":
+      "Wir verwenden die NPV-Gleichung mit Steuern\n\n$$\nNPV^s=-I_0+\\sum_{t=1}^T \\frac{CF_t-s(CF_t-AfA)}{(1+i(1-s))^t}.\n$$\n\nWir erhalten zuerst für die Abschreibungen des ersten Projektes $AfA(A)=450$ sowie $AfA(B)=650$. Damit ergibt sich\n\n$$\nNPV^s(A)=-900+\\frac{33\\%\\cdot 450}{(1+20\\%(1-33\\%))}+ \\frac{1700-33\\%\\cdot (1700-450)}{(1+20\\%(1-33\\%))^2}\n$$\n\n$$\n\\approx 232,15\n$$\n\nsowie\n\n$$\nNPV^s(B)=-1300+\\frac{2000-33\\%\\cdot (2000-650)}{(1+20\\%(1-33\\%))}+ \\frac{33\\%\\cdot 650}{(1+20\\%(1-33\\%))^2}\n$$\n\n$$\n\\approx 237,61\n$$",
+  },
   "set1-extra": {
     "Aufgabe 7":
       "r=1.000.000\\frac{0,05\\cdot (1+0,05)^{30}}{(1+0,05)^{30}-1}=65.051,44",
