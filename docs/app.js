@@ -109,7 +109,7 @@ function preprocessEmbeddedReferences(html) {
 
   output = output.replace(
     /<p>\s*<a[^>]*href="[^"]*xid-19619316_2[^"]*"[^>]*>\s*<img[^>]*xid-19619317_2[^>]*>\s*<\/a>\s*<\/p>/gi,
-    '<p class="figure-note">Die zugehörige Grafik war im Blackboard-Export nicht enthalten.</p>'
+    '<p><a href="./assets/fisher-aufgabe-6.png" target="_blank" rel="noopener"><img src="./assets/fisher-aufgabe-6.png" alt="Fisher-Modell Grafik" width="520"></a></p>'
   );
 
   output = output.replace(
