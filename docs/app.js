@@ -98,6 +98,20 @@ const embeddedImageReplacements = {
 };
 
 const solutionOverrides = {
+  set1: {
+    "Aufgabe 2":
+      "$\\text{Geldbetrag}=x$ setzen.\n\nx\\cdot (1+i)^{20}=3x\n\n(1+i)^{20}=3\n\ni=\\sqrt[20]{3}-1=5,6467\\%",
+    "Aufgabe 4":
+      "15.000\\times (1+0,065)^n=2\\times 15.000\n\n(1+0,065)^n=2\n\nn\\ln(1+0,065)=\\ln(2)\n\nn=\\frac{\\ln(2)}{\\ln(1+0,065)}=11,007\\ \\text{Jahre}",
+    "Aufgabe 5":
+      "15.500\\times (1+i)^{13}=35.146,06\n\ni=\\sqrt[13]{\\frac{35.146,06}{15.500}}=6,5\\%",
+    "Aufgabe 7":
+      "r=18.770,15\\frac{0,04\\cdot (1+0,04)^{12}}{(1+0,04)^{12}-1}=2.000",
+    "Aufgabe 8":
+      "R_0=700\\cdot \\frac{(1+0,05)^{10}-1}{0,05\\cdot (1+0,05)^{10}}=5.405,21",
+    "Aufgabe 10":
+      "R_0=55.000\\cdot\\frac{1,06^{20}-1}{0,06\\cdot 1,06^{20}}=630.845,67",
+  },
   set3: {
     "Aufgabe 5a":
       "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\bigl(C_1-(1+i)\\cdot(\\bar{C}_0-C_0)\\bigr).",
