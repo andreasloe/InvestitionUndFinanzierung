@@ -1,3 +1,5 @@
+const assetVersion = "20260326-3";
+
 const exerciseSets = [
   {
     id: "set1",
@@ -57,7 +59,7 @@ const exerciseSets = [
   },
 ];
 
-const solutionDataPromise = fetch("./data/exercise_solutions.json")
+const solutionDataPromise = fetch(`./data/exercise_solutions.json?v=${assetVersion}`)
   .then((response) => (response.ok ? response.json() : {}))
   .catch(() => ({}));
 
@@ -823,7 +825,7 @@ async function loadExerciseSet(meta, button) {
 
   try {
     const [response, solutionData] = await Promise.all([
-      fetch(meta.file),
+      fetch(`${meta.file}?v=${assetVersion}`),
       solutionDataPromise,
     ]);
     if (!response.ok) {
