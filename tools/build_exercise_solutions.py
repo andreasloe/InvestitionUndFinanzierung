@@ -96,9 +96,10 @@ def clean_solution_text(text: str) -> str:
         "\\\\": "\n",
     }
 
-    text = re.sub(r"%.*", "", text)
+    text = re.sub(r"(?<!\\)%.*", "", text)
     text = re.sub(r"\\(newpage|clearpage)\b", "", text)
     text = re.sub(r"\\vspace\*?\{[^}]*\}", "", text)
+    text = re.sub(r"\\vspace-?[0-9.,]+[a-zA-Z]+", "", text)
     text = re.sub(r"\\label\{[^}]+\}", "", text)
     text = re.sub(r"\\ref\{([^}]+)\}", r"[\1]", text)
     text = re.sub(r"\\href\{([^}]+)\}\{([^}]+)\}", r"\2 (\1)", text)
@@ -115,10 +116,13 @@ def clean_solution_text(text: str) -> str:
     text = re.sub(r"^\s*\[[a-z]{1,3}\]\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^\s*[clr|]+\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"^\s*\\hline\s*$", "", text, flags=re.MULTILINE)
+    text = re.sub(r"^\s*\{\}\s*$", "", text, flags=re.MULTILINE)
 
     for old, new in substitutions.items():
         text = text.replace(old, new)
 
+    text = text.replace("&", "")
+    text = re.sub(r"\\\s*$", "", text, flags=re.MULTILINE)
     text = re.sub(r"\n{3,}", "\n\n", text)
     text = re.sub(r"[ \t]{2,}", " ", text)
     text = re.sub(r"[ \t]+\n", "\n", text)
