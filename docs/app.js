@@ -8,7 +8,7 @@ const exerciseSets = [
   },
   {
     id: "set1-extra",
-    title: "Zusatz zu Set 1",
+    title: "Zusatzaufgaben Set 1",
     description: "Ergänzende Aufgaben zu Finanzmathematik",
     file: "./qti/set1_extra.xml",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
@@ -22,7 +22,7 @@ const exerciseSets = [
   },
   {
     id: "set2-extra",
-    title: "Zusatz zu Set 2",
+    title: "Zusatzaufgaben Set 2",
     description: "Ergänzungen zu Sicherheit und Steuern",
     file: "./qti/set2_extra.xml",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
@@ -36,7 +36,7 @@ const exerciseSets = [
   },
   {
     id: "set3-extra",
-    title: "Zusatz zu Set 3",
+    title: "Zusatzaufgaben Set 3",
     description: "Weitere Aufgaben zum Fisher-Modell",
     file: "./qti/set3_extra.xml",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
@@ -50,7 +50,7 @@ const exerciseSets = [
   },
   {
     id: "set4-extra",
-    title: "Zusatz zu Set 4",
+    title: "Zusatzaufgaben Set 4",
     description: "Vertiefung und zusätzliche Rechenaufgaben",
     file: "./qti/set4_extra.xml",
     resources: [{ label: "Übungs-PDF", href: "./exercises/uebungsaufgaben.pdf" }],
