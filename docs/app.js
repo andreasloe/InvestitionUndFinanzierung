@@ -83,6 +83,12 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function renderMath(container) {
+  if (window.MathJax?.typesetPromise) {
+    window.MathJax.typesetPromise([container]).catch(() => {});
+  }
+}
+
 function cleanHtml(html, options = {}) {
   const decoded = decodeHtmlEntities(html || "");
   const template = document.createElement("template");
@@ -206,10 +212,12 @@ function renderSolutionDetails(text) {
     return "";
   }
 
+  const formatted = escapeHtml(text).replace(/\n/g, "<br />");
+
   return `
     <details class="solution-details">
       <summary>Musterlösung anzeigen</summary>
-      <pre>${escapeHtml(text)}</pre>
+      <div class="solution-content">${formatted}</div>
     </details>
   `;
 }
@@ -286,6 +294,7 @@ function renderQuestion(question, index) {
       result.kind === "success" ? "feedback-success" : "feedback-error"
     }`;
     feedback.innerHTML = result.html;
+    renderMath(feedback);
   }
 
   button.addEventListener("click", check);

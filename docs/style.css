@@ -566,14 +566,18 @@ a:hover {
   color: var(--accent);
 }
 
-.solution-details pre {
+.solution-content {
   margin: 0.85rem 0 0;
   padding: 0.9rem;
   overflow-x: auto;
-  white-space: pre-wrap;
+  white-space: normal;
   border-radius: 14px;
   background: rgba(18, 65, 112, 0.05);
-  font: 0.95rem/1.55 "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  line-height: 1.7;
+}
+
+.solution-content mjx-container {
+  margin: 0 0.2rem;
 }
 
 .resource-grid {
