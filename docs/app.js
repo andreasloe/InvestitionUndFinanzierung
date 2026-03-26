@@ -217,6 +217,11 @@ function isFormulaLine(line) {
     return false;
   }
 
+  const proseRemainder = value.replace(/\$[^$]*\$/g, "").trim();
+  if (proseRemainder && /[A-Za-zÄÖÜäöü]/.test(proseRemainder)) {
+    return false;
+  }
+
   return (
     /\\frac|\\cdot|\\sqrt|\\ln|\\Longrightarrow|\\rightarrow|\\mathrm|\\text|\\sum|\\approx/.test(
       value
@@ -383,7 +388,7 @@ function renderQuestion(question, index) {
     </div>
     <div class="feedback"></div>
     <div class="question-footer">
-      <a class="question-backlink" href="#uebungen">Zurück zum Anfang der Übungen</a>
+      <a class="question-backlink" href="#uebungen">nach oben</a>
     </div>
   `;
 
