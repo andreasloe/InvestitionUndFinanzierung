@@ -77,16 +77,26 @@ function escapeHtml(value) {
 }
 
 function renderMath(container) {
-  if (window.MathJax?.typesetPromise) {
-    window.MathJax.typesetPromise([container]).catch(() => {});
+  if (!window.MathJax?.typesetPromise) {
+    return;
   }
+
+  if (window.MathJax.typesetClear) {
+    try {
+      window.MathJax.typesetClear([container]);
+    } catch (_error) {
+      // no-op
+    }
+  }
+
+  window.MathJax.typesetPromise([container]).catch(() => {});
 }
 
 const embeddedImageReplacements = {
-  "xid-19619306_2": "$U(C_0,C_1)= C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}$",
-  "xid-19619307_2": "$\\bar{C_0}=C_0+X_0$",
-  "xid-19619308_2": "$C_1=(1+i)\\cdot X_0$",
-  "xid-19619314_2": "$\\bar{C_0}$",
+  "xid-19619306_2": "\\(U(C_0,C_1)= C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}\\)",
+  "xid-19619307_2": "\\(\\bar{C_0}=C_0+X_0\\)",
+  "xid-19619308_2": "\\(C_1=(1+i)\\cdot X_0\\)",
+  "xid-19619314_2": "\\(\\bar{C_0}\\)",
 };
 
 const solutionOverrides = {
@@ -207,571 +217,526 @@ function rewriteEmbeddedImage(node) {
 
   const span = document.createElement("span");
   span.className = "inline-formula";
-  span.textContent = replacement;
+  span.innerHTML = replacement;
   node.replaceWith(span);
 }
 
-function cleanHtml(html, options = {}) {
-  const template = document.createElement("template");
-  template.innerHTML = preprocessEmbeddedReferences(html || "");
+function normalizeDomFormulas(container) {
+  container.querySelectorAll("img").forEach((img) => rewriteEmbeddedImage(img));
 
-  const selectors = ["script", "style", "xml", "meta", "link", "applet", "object"];
-  if (options.removeImages) {
-    selectors.push("img");
-  }
-
-  template.content.querySelectorAll(selectors.join(", ")).forEach((node) => node.remove());
-
-  if (!options.removeImages) {
-    template.content.querySelectorAll("img").forEach((node) => rewriteEmbeddedImage(node));
-    template.content.querySelectorAll("a").forEach((node) => {
-      const href = node.getAttribute("href") || "";
-      if (href.includes("@X@EmbeddedFile.requestUrlStub@X@")) {
-        node.removeAttribute("href");
-      }
-    });
-  }
-
-  template.content.querySelectorAll("*").forEach((node) => {
-    [...node.attributes].forEach((attr) => {
-      const name = attr.name.toLowerCase();
-      if (
-        name === "style" ||
-        name.startsWith("on") ||
-        (name === "class" || name === "id")
-      ) {
-        node.removeAttribute(attr.name);
-      }
-    });
-  });
-
-  return template.innerHTML.trim();
-}
-
-function textOrHtml(node, selector, options = {}) {
-  const target = node.querySelector(selector);
-  return cleanHtml(target ? target.textContent : "", options);
-}
-
-function normalizeQuestionKey(title) {
-  const match = (title || "").match(/Aufgabe\s+\d+/);
-  return match ? match[0].trim() : (title || "Aufgabe").trim();
-}
-
-function extractSubtaskSolution(solutionText, letter) {
-  if (!solutionText || !letter) {
-    return solutionText || "";
-  }
-
-  const normalizedLetter = letter.toLowerCase();
-  const lines = solutionText.split("\n");
-  const chunks = [];
-  let currentLetter = "";
-  let buffer = [];
-
-  function flush() {
-    if (currentLetter) {
-      chunks.push({ letter: currentLetter, text: buffer.join("\n").trim() });
-    }
-    currentLetter = "";
-    buffer = [];
-  }
-
-  lines.forEach((line) => {
-    const match = line.trim().match(/^([a-z])\)\s*(.*)$/i);
-    if (match) {
-      flush();
-      currentLetter = match[1].toLowerCase();
-      if (match[2]) {
-        buffer.push(match[2]);
-      }
+  container.querySelectorAll("math, .math, .formula").forEach((node) => {
+    if (node.dataset.normalizedMath === "true") {
       return;
     }
 
-    if (currentLetter) {
-      buffer.push(line);
+    const html = node.innerHTML || node.textContent || "";
+    const normalized = prepareCellMath(decodeHtmlEntities(html));
+    if (normalized) {
+      node.innerHTML = `\\(${normalized}\\)`;
+      node.dataset.normalizedMath = "true";
     }
   });
-
-  flush();
-  const found = chunks.find((chunk) => chunk.letter === normalizedLetter);
-  return found ? found.text : solutionText;
 }
 
-function questionOverride(setId, title) {
-  if (setId === "set3") {
-    if (title === "Aufgabe 6b" || title === "Aufgabe 6c") {
-      return { skip: true };
-    }
-
-    if (title === "Aufgabe 6d") {
-      return {
-        title: "Aufgabe 6b",
-        solutionLetter: "b",
-      };
-    }
-  }
-
-  return {
-    title,
-    solutionLetter: null,
-  };
-}
-
-function parseQuestion(item, solutionLookup, setId) {
-  const type = item.querySelector("bbmd_questiontype")?.textContent?.trim() || "";
-  if (type !== "Numeric") {
-    return null;
-  }
-
-  const sourceTitle = item.getAttribute("title") || "Aufgabe";
-  const override = questionOverride(setId, sourceTitle);
-  if (override.skip) {
-    return null;
-  }
-
-  const title = override.title || sourceTitle;
-  const prompt = applyPromptOverride(
-    setId,
-    sourceTitle,
-    textOrHtml(item, "presentation mat_formattedtext")
-  );
-  const incorrectFeedback = textOrHtml(
-    item,
-    'itemfeedback[ident="incorrect"] mat_formattedtext',
-    { removeImages: true }
-  );
-  const conditions = item.querySelectorAll("resprocessing respcondition conditionvar");
-
-  let min = null;
-  let max = null;
-  let exact = null;
-
-  conditions.forEach((condition) => {
-    const gte = condition.querySelector("vargte");
-    const lte = condition.querySelector("varlte");
-    const equal = condition.querySelector("varequal");
-
-    if (gte && lte) {
-      min = Number.parseFloat(gte.textContent.trim().replace(",", "."));
-      max = Number.parseFloat(lte.textContent.trim().replace(",", "."));
-    }
-
-    if (equal) {
-      exact = Number.parseFloat(equal.textContent.trim().replace(",", "."));
-    }
+function convertInlineDollarMathInTextNodes(container) {
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue || !node.nodeValue.includes("$")) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      const parent = node.parentElement;
+      if (!parent) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      if (parent.closest("script, style, textarea, code, pre")) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      if (parent.classList.contains("math-processed")) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    },
   });
 
-  if (min === null && max === null && exact === null) {
-    return null;
+  const nodes = [];
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode);
   }
 
-  const questionKey = normalizeQuestionKey(sourceTitle);
-  const subtaskMatch =
-    override.solutionLetter
-      ? [null, override.solutionLetter]
-      : sourceTitle.match(/Aufgabe\s+\d+([a-z])$/i);
-  let solutionText = solutionLookup[questionKey] || "";
-  if (subtaskMatch && solutionText) {
-    solutionText = extractSubtaskSolution(solutionText, subtaskMatch[1]);
-  }
-  const explicitSolution = getSolutionOverride(setId, title);
-  if (explicitSolution) {
-    solutionText = explicitSolution;
-  }
-  if (normalizeQuestionKey(title) === "Aufgabe 6" && solutionText) {
-    solutionText = solutionText.replace(/\\bar\{?C\}?_0/g, "C_0");
-  }
-
-  return {
-    title,
-    prompt,
-    incorrectFeedback,
-    min,
-    max,
-    exact,
-    solutionText,
-    forceSolutionOnly: setId === "set3" && /^Aufgabe 5[a-d]$/i.test(title),
-  };
-}
-
-function parseExerciseXml(xmlText, solutionLookup, setId) {
-  const parser = new DOMParser();
-  const xml = parser.parseFromString(xmlText, "application/xml");
-  const title = xml.querySelector("assessment")?.getAttribute("title") || "Aufgabenset";
-  const intro = textOrHtml(xml, "presentation_material mat_formattedtext");
-  const items = [...xml.querySelectorAll("section > item")]
-    .map((item) => parseQuestion(item, solutionLookup, setId))
-    .filter(Boolean);
-
-  return { title, intro, items };
-}
-
-function formatSolution(question) {
-  if (Number.isFinite(question.exact)) {
-    return String(question.exact).replace(".", ",");
-  }
-
-  if (Number.isFinite(question.min) && Number.isFinite(question.max)) {
-    const midpoint = ((question.min + question.max) / 2).toFixed(4);
-    return midpoint.replace(".", ",");
-  }
-
-  return "";
-}
-
-function hasDetailedFeedback(html) {
-  const text = (html || "")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-
-  return text.length > 40;
-}
-
-function isFormulaLine(line) {
-  const value = line.trim();
-  if (!value) {
-    return false;
-  }
-
-  if (/^\[[^\]]+\]$/.test(value)) {
-    return false;
-  }
-
-  const proseRemainder = value.replace(/\$[^$]*\$/g, "").trim();
-  if (proseRemainder && /[A-Za-zÄÖÜäöü]/.test(proseRemainder)) {
-    return false;
-  }
-
-  return (
-    /\\frac|\\cdot|\\sqrt|\\ln|\\Longrightarrow|\\rightarrow|\\mathrm|\\text|\\sum|\\approx/.test(
-      value
-    ) ||
-    /[=_^]/.test(value) ||
-    value.startsWith("$") ||
-    value.endsWith("$")
-  );
-}
-
-function isTableLine(line) {
-  const value = line.trim();
-  return value.includes("|") && !value.startsWith("[");
-}
-
-function isStandaloneHeaderRow(cells, headerLength) {
-  if (!cells.length || cells.length >= headerLength) {
-    return false;
-  }
-
-  return cells.every((cell) => /^\$?\s*t\s*=/.test(prepareCellMath(cell)));
-}
-
-function renderSolutionTable(lines) {
-  const rows = [];
-
-  lines.forEach((line) => {
-    const cells = line
-      .split("|")
-      .map((cell) => cell.trim())
-      .filter(Boolean)
-      .map((cell) => prepareCellMath(cell));
-
-    if (line.trim().startsWith("|") && cells.length === 1 && rows.length) {
-      rows[rows.length - 1].push(cells[0]);
+  nodes.forEach((textNode) => {
+    const text = textNode.nodeValue;
+    if (!text || !text.includes("$")) {
       return;
     }
 
-    if (cells.length <= 1) {
+    const parts = [];
+    let lastIndex = 0;
+    const regex = /\$(.+?)\$/g;
+    let match;
+    let found = false;
+
+    while ((match = regex.exec(text)) !== null) {
+      found = true;
+      if (match.index > lastIndex) {
+        parts.push(document.createTextNode(text.slice(lastIndex, match.index)));
+      }
+      const span = document.createElement("span");
+      span.className = "inline-formula math-processed";
+      span.innerHTML = `\\(${prepareCellMath(match[1])}\\)`;
+      parts.push(span);
+      lastIndex = regex.lastIndex;
+    }
+
+    if (!found) {
       return;
     }
 
-    rows.push(cells);
-  });
+    if (lastIndex < text.length) {
+      parts.push(document.createTextNode(text.slice(lastIndex)));
+    }
 
-  if (!rows.length) {
+    const fragment = document.createDocumentFragment();
+    parts.forEach((part) => fragment.appendChild(part));
+    textNode.parentNode.replaceChild(fragment, textNode);
+  });
+}
+
+function preparePromptHtml(prompt) {
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = preprocessEmbeddedReferences(prompt || "");
+  normalizeDomFormulas(wrapper);
+  convertInlineDollarMathInTextNodes(wrapper);
+  return wrapper.innerHTML;
+}
+
+function formatSolutionText(solutionText) {
+  if (!solutionText) {
     return "";
   }
 
-  let header = [...rows[0]];
-  let startIndex = 1;
-
-  if (rows[1] && isStandaloneHeaderRow(rows[1], header.length)) {
-    header = header.concat(rows[1]);
-    startIndex = 2;
-  }
-
-  const body = rows.slice(startIndex).map((row) => {
-    if (row.length < header.length) {
-      return row.concat(Array.from({ length: header.length - row.length }, () => ""));
-    }
-    return row;
-  });
-
-  return `
-    <div class="solution-table-wrap">
-      <table class="solution-table">
-        <thead>
-          <tr>${header.map((cell) => `<th>${renderCellContent(cell)}</th>`).join("")}</tr>
-        </thead>
-        <tbody>
-          ${body
-            .map(
-              (row) => `<tr>${row.map((cell) => `<td>${renderCellContent(cell)}</td>`).join("")}</tr>`
-            )
-            .join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
-function renderTextWithInlineMath(line) {
-  const prepared = normalizeMinusSigns(line);
-  const parts = prepared.split(/(\$[^$]+\$)/g).filter(Boolean);
-  return parts
-    .map((part) => {
-      if (part.startsWith("$") && part.endsWith("$")) {
-        return escapeHtml(part);
+  const normalized = prepareCellMath(solutionText)
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      if (/^[A-Za-zÄÖÜäöü].*[.:]$/.test(line) || /Punkt\s+[A-Z]/.test(line)) {
+        return `<p>${escapeHtml(line)}</p>`;
       }
-      return escapeHtml(part);
+      return `<p><span class="inline-formula">\\(${escapeHtml(line)}\\)</span></p>`;
     })
     .join("");
+
+  return normalized;
 }
 
-function formatSolutionMarkup(text) {
-  const lines = text
-    .split(/\n+/)
-    .map((line) => line.trim())
-    .filter(Boolean);
+function stripNamespace(tagName) {
+  return tagName.includes(":") ? tagName.split(":").pop() : tagName;
+}
 
-  const chunks = [];
+function findChild(element, localName) {
+  return Array.from(element.children).find(
+    (child) => stripNamespace(child.tagName).toLowerCase() === localName.toLowerCase()
+  );
+}
 
-  for (let index = 0; index < lines.length; ) {
-    const line = lines[index];
+function findDescendants(element, localName) {
+  return Array.from(element.getElementsByTagName("*")).filter(
+    (child) => stripNamespace(child.tagName).toLowerCase() === localName.toLowerCase()
+  );
+}
 
-    if (isTableLine(line)) {
-      const tableLines = [];
-      while (index < lines.length && isTableLine(lines[index])) {
-        tableLines.push(lines[index]);
-        index += 1;
-      }
-      chunks.push(renderSolutionTable(tableLines));
-      continue;
-    }
+function getNodeInnerXml(node) {
+  return Array.from(node.childNodes)
+    .map((child) => new XMLSerializer().serializeToString(child))
+    .join("");
+}
 
-    const subtaskMatch = line.match(/^([a-z]\))\s*(.+)$/i);
-    if (subtaskMatch && isFormulaLine(subtaskMatch[2])) {
-      const mathBody = prepareCellMath(subtaskMatch[2]);
-      const math =
-        mathBody.startsWith("$") || mathBody.startsWith("\\[")
-          ? escapeHtml(mathBody)
-          : `\\(${escapeHtml(mathBody)}\\)`;
-      chunks.push(
-        `<p class="solution-line"><strong>${escapeHtml(subtaskMatch[1])}</strong> <span class="solution-line-math">${math}</span></p>`
-      );
-      index += 1;
-      continue;
-    }
-
-    if (isFormulaLine(line)) {
-      const prepared = prepareCellMath(line);
-      const math =
-        prepared.startsWith("$") || prepared.startsWith("\\[")
-          ? escapeHtml(prepared)
-          : `\\[${escapeHtml(prepared)}\\]`;
-      chunks.push(`<div class="solution-line solution-line-math">${math}</div>`);
-    } else {
-      chunks.push(`<p class="solution-line">${renderTextWithInlineMath(line)}</p>`);
-    }
-    index += 1;
+function getPromptFromItemBody(itemBody) {
+  if (!itemBody) {
+    return "";
   }
 
-  return chunks.join("");
+  const cloned = itemBody.cloneNode(true);
+  findDescendants(cloned, "rubricBlock").forEach((node) => node.remove());
+  return getNodeInnerXml(cloned);
 }
 
-function renderSolutionDetails(text) {
-  if (!text) {
+function extractChoiceInteractions(itemBody) {
+  return findDescendants(itemBody, "choiceInteraction").map((interaction) => {
+    const responseIdentifier = interaction.getAttribute("responseIdentifier") || "";
+    const promptNode = findChild(interaction, "prompt");
+    const choices = findDescendants(interaction, "simpleChoice").map((choice) => ({
+      identifier: choice.getAttribute("identifier") || "",
+      text: decodeHtmlEntities(choice.textContent || "").trim(),
+    }));
+    return {
+      responseIdentifier,
+      prompt: decodeHtmlEntities(promptNode?.textContent || "").trim(),
+      choices,
+    };
+  });
+}
+
+function extractTextEntries(itemBody) {
+  return findDescendants(itemBody, "textEntryInteraction").map((interaction) => ({
+    responseIdentifier: interaction.getAttribute("responseIdentifier") || "",
+    expectedLength: interaction.getAttribute("expectedLength") || "",
+  }));
+}
+
+function extractExpectedResponses(itemElement) {
+  const map = {};
+  findDescendants(itemElement, "responseDeclaration").forEach((decl) => {
+    const identifier = decl.getAttribute("identifier");
+    const correctResponse = findChild(decl, "correctResponse");
+    if (!identifier || !correctResponse) {
+      return;
+    }
+
+    const values = findDescendants(correctResponse, "value")
+      .map((node) => decodeHtmlEntities(node.textContent || "").trim())
+      .filter(Boolean);
+    map[identifier] = values;
+  });
+  return map;
+}
+
+function extractRubricBlocks(itemBody) {
+  return findDescendants(itemBody, "rubricBlock")
+    .filter((node) => (node.getAttribute("view") || "").toLowerCase() === "scorer")
+    .map((node) => preprocessEmbeddedReferences(getNodeInnerXml(node)));
+}
+
+function parseAssessmentItems(xmlDoc, setId) {
+  const assessmentItems = findDescendants(xmlDoc, "assessmentItem");
+  return assessmentItems.map((item, index) => {
+    const itemBody = findChild(item, "itemBody");
+    const title = item.getAttribute("title") || `Aufgabe ${index + 1}`;
+    const promptRaw = getPromptFromItemBody(itemBody);
+    const prompt = preparePromptHtml(applyPromptOverride(setId, title, promptRaw));
+    const choiceInteractions = extractChoiceInteractions(itemBody);
+    const textEntries = extractTextEntries(itemBody);
+    const expectedResponses = extractExpectedResponses(item);
+    const rubricBlocks = extractRubricBlocks(itemBody);
+    const solutionOverride = getSolutionOverride(setId, title);
+    const solutionHtml = solutionOverride
+      ? formatSolutionText(solutionOverride)
+      : rubricBlocks.join("");
+
+    return {
+      id: item.getAttribute("identifier") || `item-${index + 1}`,
+      title,
+      prompt,
+      choiceInteractions,
+      textEntries,
+      expectedResponses,
+      solutionHtml,
+    };
+  });
+}
+
+function renderResources(resources = []) {
+  if (!resources.length) {
     return "";
   }
 
   return `
-    <details class="solution-details">
-      <summary>Musterlösung anzeigen</summary>
-      <div class="solution-content">${formatSolutionMarkup(text)}</div>
-    </details>
+    <div class="set-resources">
+      ${resources
+        .map(
+          (resource) => `
+            <a class="resource-link" href="${resource.href}" target="_blank" rel="noopener">
+              ${resource.label}
+            </a>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderExerciseCards(sets) {
+  return sets
+    .map(
+      (set) => `
+        <article class="exercise-card" data-set-id="${set.id}">
+          <div class="exercise-card__content">
+            <h2>${set.title}</h2>
+            <p>${set.description}</p>
+            ${renderResources(set.resources)}
+          </div>
+          <button class="button button--primary" data-open-set="${set.id}">Aufgaben öffnen</button>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function renderChoiceInteraction(interaction, index, taskIndex, submittedAnswers = []) {
+  const selected = new Set(submittedAnswers || []);
+  const inputType = interaction.choices.length > 1 ? "checkbox" : "radio";
+
+  return `
+    <fieldset class="choice-interaction">
+      <legend>${interaction.prompt || `Teilaufgabe ${taskIndex + 1}.${index + 1}`}</legend>
+      ${interaction.choices
+        .map(
+          (choice) => `
+            <label class="choice-option">
+              <input
+                type="${inputType}"
+                name="${interaction.responseIdentifier}"
+                value="${choice.identifier}"
+                ${selected.has(choice.identifier) ? "checked" : ""}
+              >
+              <span>${escapeHtml(choice.text)}</span>
+            </label>
+          `
+        )
+        .join("")}
+    </fieldset>
   `;
 }
 
-function buildFallbackFeedback(question) {
-  const solution = formatSolution(question);
-  return solution ? `<p><strong>Richtiger Wert:</strong> ${solution}</p>` : "";
-}
-
-function evaluateAnswer(question, rawValue) {
-  const normalized = rawValue.trim().replace(/\s+/g, "").replace(",", ".");
-  const numeric = Number.parseFloat(normalized);
-  if (!Number.isFinite(numeric)) {
-    return {
-      ok: false,
-      html: "<p>Bitte eine numerische Antwort eingeben.</p>",
-      kind: "error",
-    };
-  }
-
-  if (question.forceSolutionOnly) {
-    return {
-      ok: false,
-      html: `<p>Die Eingabe dient hier nur dazu, die Musterlösung anzuzeigen.</p>${renderSolutionDetails(
-        question.solutionText
-      )}`,
-      kind: "error",
-    };
-  }
-
-  const hasRange = question.min !== null || question.max !== null;
-  const withinRange =
-    hasRange &&
-    (question.min === null || numeric >= question.min) &&
-    (question.max === null || numeric <= question.max);
-  const matchesExact =
-    question.exact !== null && Math.abs(numeric - question.exact) < 1e-9;
-  const ok = withinRange || matchesExact;
-
-  if (ok) {
-    return {
-      ok: true,
-      html: "<p>Richtig.</p>",
-      kind: "success",
-    };
-  }
-
-  const detailHtml = renderSolutionDetails(question.solutionText);
-  const hintHtml =
-    !question.solutionText && hasDetailedFeedback(question.incorrectFeedback)
-      ? question.incorrectFeedback
-      : buildFallbackFeedback(question);
-
-  return {
-    ok: false,
-    html: `<p>Falsch.</p>${hintHtml}${detailHtml}`,
-    kind: "error",
-  };
-}
-
-function renderQuestion(question) {
-  const article = document.createElement("article");
-  article.className = "question-card";
-
-  const promptHtml = question.prompt || "<p>Keine Aufgabenstellung verfügbar.</p>";
-  article.innerHTML = `
-    <span class="question-number">${question.title}</span>
-    <div class="question-body">${promptHtml}</div>
-    <div class="answer-row">
-      <input type="text" inputmode="decimal" aria-label="${question.title}" placeholder="Antwort eingeben" />
-      <button type="button">Prüfen</button>
-    </div>
-    <div class="feedback"></div>
-    <div class="question-footer">
-      <a class="question-backlink" href="#uebungen">nach oben</a>
-    </div>
+function renderTextEntry(entry, index, taskIndex, submittedValue = "") {
+  const label = `Teilaufgabe ${taskIndex + 1}.${index + 1}`;
+  return `
+    <label class="text-entry">
+      <span>${label}</span>
+      <input type="text" name="${entry.responseIdentifier}" value="${escapeHtml(submittedValue)}">
+    </label>
   `;
-
-  const input = article.querySelector("input");
-  const button = article.querySelector("button");
-  const feedback = article.querySelector(".feedback");
-
-  function check() {
-    const result = evaluateAnswer(question, input.value);
-    feedback.className = `feedback is-visible ${
-      result.kind === "success" ? "feedback-success" : "feedback-error"
-    }`;
-    feedback.innerHTML = result.html;
-    renderMath(feedback);
-  }
-
-  button.addEventListener("click", check);
-  input.addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      check();
-    }
-  });
-
-  return article;
 }
 
-function renderExerciseSet(meta, data) {
-  const panel = document.getElementById("exercise-panel");
-  const links = meta.resources
-    .map((resource) => `<a href="${resource.href}" target="_blank">${resource.label}</a>`)
+function renderTask(task, taskIndex, userAnswers = {}) {
+  const choiceHtml = task.choiceInteractions
+    .map((interaction, index) =>
+      renderChoiceInteraction(
+        interaction,
+        index,
+        taskIndex,
+        userAnswers[interaction.responseIdentifier] || []
+      )
+    )
     .join("");
 
-  panel.innerHTML = `
-    <div class="exercise-header">
-      <h3>${data.title}</h3>
-      <p class="exercise-set-description">${meta.description}</p>
-      ${data.intro ? `<div class="exercise-set-description">${data.intro}</div>` : ""}
-      <div class="exercise-links link-row">${links}</div>
-    </div>
-    <div class="question-list"></div>
-  `;
+  const textHtml = task.textEntries
+    .map((entry, index) =>
+      renderTextEntry(entry, index, taskIndex, userAnswers[entry.responseIdentifier] || "")
+    )
+    .join("");
 
-  const list = panel.querySelector(".question-list");
-  data.items.forEach((question) => list.appendChild(renderQuestion(question)));
-  renderMath(panel);
+  return `
+    <section class="task" data-task-id="${task.id}">
+      <header class="task__header">
+        <h3>${task.title}</h3>
+      </header>
+      <div class="task__prompt">${task.prompt}</div>
+      <div class="task__interactions">
+        ${choiceHtml}
+        ${textHtml}
+      </div>
+      <div class="task__solution is-hidden">${task.solutionHtml}</div>
+    </section>
+  `;
 }
 
-async function loadExerciseSet(meta, button) {
-  const panel = document.getElementById("exercise-panel");
-  panel.innerHTML = `
-    <div class="exercise-empty">
-      <h3>${meta.title}</h3>
-      <p>Aufgabenset wird geladen.</p>
-    </div>
-  `;
+function renderTaskList(tasks, solutionData, setId) {
+  const answers = solutionData?.[setId]?.answers || {};
+  return tasks.map((task, index) => renderTask(task, index, answers[task.id] || {})).join("");
+}
 
-  document.querySelectorAll(".exercise-list button").forEach((element) => {
-    element.classList.toggle("active", element === button);
+async function loadAssessmentItems(set) {
+  const response = await fetch(set.file);
+  if (!response.ok) {
+    throw new Error(`Datei konnte nicht geladen werden: ${set.file}`);
+  }
+
+  const xmlText = await response.text();
+  const xmlDoc = new DOMParser().parseFromString(xmlText, "application/xml");
+  return parseAssessmentItems(xmlDoc, set.id);
+}
+
+function collectAnswers(formElement) {
+  const formData = new FormData(formElement);
+  const answers = {};
+
+  for (const [key, value] of formData.entries()) {
+    if (answers[key]) {
+      if (Array.isArray(answers[key])) {
+        answers[key].push(value);
+      } else {
+        answers[key] = [answers[key], value];
+      }
+    } else {
+      answers[key] = value;
+    }
+  }
+
+  return answers;
+}
+
+function evaluateTask(task, answers) {
+  const result = {
+    isCorrect: true,
+    feedback: [],
+  };
+
+  task.choiceInteractions.forEach((interaction) => {
+    const expected = task.expectedResponses[interaction.responseIdentifier] || [];
+    const actual = answers[interaction.responseIdentifier];
+    const actualValues = Array.isArray(actual)
+      ? actual
+      : actual
+      ? [actual]
+      : [];
+
+    const expectedSorted = [...expected].sort();
+    const actualSorted = [...actualValues].sort();
+
+    const matches =
+      expectedSorted.length === actualSorted.length &&
+      expectedSorted.every((value, index) => value === actualSorted[index]);
+
+    if (!matches) {
+      result.isCorrect = false;
+      result.feedback.push(`Auswahl bei ${interaction.prompt || interaction.responseIdentifier} ist nicht korrekt.`);
+    }
   });
 
-  try {
-    const [response, solutionData] = await Promise.all([
-      fetch(meta.file),
-      solutionDataPromise,
-    ]);
-    if (!response.ok) {
-      throw new Error("fetch failed");
+  task.textEntries.forEach((entry) => {
+    const expected = (task.expectedResponses[entry.responseIdentifier] || [""])[0];
+    const actual = (answers[entry.responseIdentifier] || "").trim();
+    if (expected && actual !== expected) {
+      result.isCorrect = false;
+      result.feedback.push(`Eingabe bei ${entry.responseIdentifier} ist nicht korrekt.`);
+    }
+  });
+
+  return result;
+}
+
+function revealSolutions(container) {
+  container.querySelectorAll(".task__solution").forEach((node) => {
+    node.classList.remove("is-hidden");
+  });
+  renderMath(container);
+}
+
+function attachSetHandlers(container, tasks) {
+  const form = container.querySelector("form");
+  const evaluateButton = container.querySelector("[data-action='evaluate']");
+  const solutionButton = container.querySelector("[data-action='show-solutions']");
+  const feedbackBox = container.querySelector(".set-feedback");
+
+  evaluateButton?.addEventListener("click", (event) => {
+    event.preventDefault();
+    const answers = collectAnswers(form);
+    const taskResults = tasks.map((task) => {
+      const relevantAnswers = {};
+      [...task.choiceInteractions, ...task.textEntries].forEach((interaction) => {
+        relevantAnswers[interaction.responseIdentifier] = answers[interaction.responseIdentifier];
+      });
+      return evaluateTask(task, relevantAnswers);
+    });
+
+    const incorrect = taskResults.filter((result) => !result.isCorrect);
+    if (!incorrect.length) {
+      feedbackBox.innerHTML = '<p class="feedback feedback--success">Alle Antworten sind korrekt.</p>';
+      return;
     }
 
-    const xmlText = await response.text();
-    const solutionLookup = solutionData[meta.id] || {};
-    const data = parseExerciseXml(xmlText, solutionLookup, meta.id);
-    renderExerciseSet(meta, data);
+    feedbackBox.innerHTML = `
+      <div class="feedback feedback--error">
+        <p>Es gibt noch Fehler.</p>
+        <ul>
+          ${incorrect.flatMap((result) => result.feedback).map((line) => `<li>${escapeHtml(line)}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  });
+
+  solutionButton?.addEventListener("click", (event) => {
+    event.preventDefault();
+    revealSolutions(container);
+  });
+}
+
+async function openExerciseSet(setId) {
+  const set = exerciseSets.find((entry) => entry.id === setId);
+  const root = document.querySelector("#app");
+  if (!set || !root) {
+    return;
+  }
+
+  root.innerHTML = '<p class="loading">Lade Aufgaben…</p>';
+
+  try {
+    const [tasks, solutionData] = await Promise.all([
+      loadAssessmentItems(set),
+      solutionDataPromise,
+    ]);
+
+    root.innerHTML = `
+      <section class="set-view">
+        <header class="set-view__header">
+          <button class="button button--secondary" data-action="back">← Zurück</button>
+          <div>
+            <h1>${set.title}</h1>
+            <p>${set.description}</p>
+          </div>
+        </header>
+        <form class="set-form">
+          ${renderTaskList(tasks, solutionData, set.id)}
+          <div class="set-actions">
+            <button class="button button--primary" data-action="evaluate">Antworten prüfen</button>
+            <button class="button button--secondary" data-action="show-solutions">Lösungen anzeigen</button>
+          </div>
+          <div class="set-feedback"></div>
+        </form>
+      </section>
+    `;
+
+    root.querySelector("[data-action='back']")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      renderOverview();
+    });
+
+    attachSetHandlers(root, tasks);
+    renderMath(root);
   } catch (error) {
-    panel.innerHTML = `
-      <div class="exercise-empty">
-        <h3>${meta.title}</h3>
-        <p>Das Aufgabenset konnte nicht geladen werden.</p>
+    root.innerHTML = `
+      <div class="feedback feedback--error">
+        <p>Die Aufgaben konnten nicht geladen werden.</p>
+        <pre>${escapeHtml(error.message)}</pre>
       </div>
     `;
   }
 }
 
-function renderExerciseList() {
-  const container = document.getElementById("exercise-list");
+function renderOverview() {
+  const root = document.querySelector("#app");
+  if (!root) {
+    return;
+  }
 
-  exerciseSets.forEach((meta, index) => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.innerHTML = `<strong>${meta.title}</strong><span>${meta.description}</span>`;
-    button.addEventListener("click", () => loadExerciseSet(meta, button));
-    container.appendChild(button);
+  root.innerHTML = `
+    <section class="overview">
+      <header class="overview__header">
+        <h1>Übungsaufgaben</h1>
+        <p>Wählen Sie ein Aufgabenset aus.</p>
+      </header>
+      <div class="exercise-grid">
+        ${renderExerciseCards(exerciseSets)}
+      </div>
+    </section>
+  `;
 
-    if (index === 0) {
-      loadExerciseSet(meta, button);
-    }
+  root.querySelectorAll("[data-open-set]").forEach((button) => {
+    button.addEventListener("click", () => openExerciseSet(button.dataset.openSet));
   });
 }
 
-document.addEventListener("DOMContentLoaded", renderExerciseList);
+document.addEventListener("DOMContentLoaded", () => {
+  renderOverview();
+});
