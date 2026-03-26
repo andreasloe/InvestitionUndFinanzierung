@@ -96,6 +96,29 @@ const embeddedImageReplacements = {
   "xid-19619314_2": "$\\bar{C_0}$",
 };
 
+const solutionOverrides = {
+  set3: {
+    "Aufgabe 5a":
+      "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\big(C_1-(1+i)\\cdot( \\bar{C}_0-C_0) \\big).",
+    "Aufgabe 5b":
+      "\\frac{\\partial L}{\\partial \\lambda} =C_1 -(1+i) \\cdot( \\bar{C}_0- C_0)=0.",
+    "Aufgabe 5c":
+      "-(1+i) = - \\frac{ \\frac{3}{5} C_0 ^ {\\frac{-2}{5}}\\cdot C_1 ^{\\frac{2}{5}} }{ \\frac{2}{5} C_0 ^ {\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}} } .",
+    "Aufgabe 5d": "\\bar{C}_0=\\frac{C_1}{1+i}+C_0",
+    "Aufgabe 6a": "(1+i) \\cdot C_0 = 250.\nPunkt A auf der Grafik.",
+    "Aufgabe 6b": "C_0=166,67.\nPunkt D auf der Grafik.",
+  },
+};
+
+const promptOverrides = {
+  set3: {
+    "Aufgabe 5a": {
+      replace:
+        '<p><em>Anmerkung</em>: github erlaubt es nicht, dass Sie hier Formeln eingeben. Wir haben daher Zahlen als Lösung (100) hinterlegt, damit man wenigstens die Musterlösung (die dann natürlich eine Formel und keine Zahl sein wird) sehen kann. Sie können irgendeine Zahl eingeben, damit Sie die richtigen Gleichungen sehen.</p>',
+    },
+  },
+};
+
 function preprocessEmbeddedReferences(html) {
   let output = decodeHtmlEntities(html || "");
 
@@ -118,6 +141,27 @@ function preprocessEmbeddedReferences(html) {
   );
 
   return output;
+}
+
+function applyPromptOverride(setId, title, prompt) {
+  const override = promptOverrides[setId]?.[title];
+  if (!override) {
+    return prompt;
+  }
+
+  return (prompt || "")
+    .replace(
+      /<p><em>Anmerkung<\/em>:[\s\S]*?sehen\.<\/p>/i,
+      override.replace
+    )
+    .replace(
+      /<p>Außerdem zählt Blackboard anders als wir\.[\s\S]*?nummeriert\.<\/p>/i,
+      ""
+    );
+}
+
+function getSolutionOverride(setId, title) {
+  return solutionOverrides[setId]?.[title] || "";
 }
 
 function normalizeMinusSigns(value) {
@@ -289,7 +333,11 @@ function parseQuestion(item, solutionLookup, setId) {
   }
 
   const title = override.title || sourceTitle;
-  const prompt = textOrHtml(item, "presentation mat_formattedtext");
+  const prompt = applyPromptOverride(
+    setId,
+    sourceTitle,
+    textOrHtml(item, "presentation mat_formattedtext")
+  );
   const incorrectFeedback = textOrHtml(
     item,
     'itemfeedback[ident="incorrect"] mat_formattedtext',
@@ -329,6 +377,10 @@ function parseQuestion(item, solutionLookup, setId) {
   if (subtaskMatch && solutionText) {
     solutionText = extractSubtaskSolution(solutionText, subtaskMatch[1]);
   }
+  const explicitSolution = getSolutionOverride(setId, title);
+  if (explicitSolution) {
+    solutionText = explicitSolution;
+  }
   if (normalizeQuestionKey(title) === "Aufgabe 6" && solutionText) {
     solutionText = solutionText.replace(/\\bar\{?C\}?_0/g, "C_0");
   }
@@ -341,6 +393,7 @@ function parseQuestion(item, solutionLookup, setId) {
     max,
     exact,
     solutionText,
+    forceSolutionOnly: setId === "set3" && /^Aufgabe 5[a-d]$/i.test(title),
   };
 }
 
@@ -565,6 +618,16 @@ function evaluateAnswer(question, rawValue) {
     return {
       ok: false,
       html: "<p>Bitte eine numerische Antwort eingeben.</p>",
+      kind: "error",
+    };
+  }
+
+  if (question.forceSolutionOnly) {
+    return {
+      ok: false,
+      html: `<p>Die Eingabe dient hier nur dazu, die Musterlösung anzuzeigen.</p>${renderSolutionDetails(
+        question.solutionText
+      )}`,
       kind: "error",
     };
   }
