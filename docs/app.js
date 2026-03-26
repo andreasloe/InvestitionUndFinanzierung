@@ -90,19 +90,19 @@ function renderMath(container) {
 
 const embeddedImageReplacements = {
   "xid-19619306_2": "$U(C_0,C_1)= C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}$",
-  "xid-19619307_2": "$\\bar{C_0}=C_0+X_0$",
+  "xid-19619307_2": "$\\bar{C}_0=C_0+X_0$",
   "xid-19619308_2": "$C_1=(1+i)\\cdot X_0$",
-  "xid-19619314_2": "$\\bar{C_0}$",
+  "xid-19619314_2": "$\\bar{C}_0$",
 };
 
 const solutionOverrides = {
   set3: {
     "Aufgabe 5a":
-      "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\big(C_1-(1+i)\\cdot( \\bar{C}_0-C_0) \\big).",
+      "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\bigl(C_1-(1+i)\\cdot(\\bar{C}_0-C_0)\\bigr).",
     "Aufgabe 5b":
-      "\\frac{\\partial L}{\\partial \\lambda} =C_1 -(1+i) \\cdot( \\bar{C}_0- C_0)=0.",
+      "\\frac{\\partial L}{\\partial \\lambda}=C_1-(1+i)\\cdot(\\bar{C}_0-C_0)=0.",
     "Aufgabe 5c":
-      "-(1+i) = - \\frac{ \\frac{3}{5} C_0 ^ {\\frac{-2}{5}}\\cdot C_1 ^{\\frac{2}{5}} }{ \\frac{2}{5} C_0 ^ {\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}} } .",
+      "-(1+i)=-\\frac{\\frac{3}{5}C_0^{\\frac{-2}{5}}\\cdot C_1^{\\frac{2}{5}}}{\\frac{2}{5}C_0^{\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}}}.",
     "Aufgabe 5d": "\\bar{C}_0=\\frac{C_1}{1+i}+C_0",
     "Aufgabe 6a": "(1+i) \\cdot C_0 = 250.\nPunkt A auf der Grafik.",
     "Aufgabe 6b": "C_0=166,67.\nPunkt D auf der Grafik.",
@@ -173,15 +173,28 @@ function normalizeMinusSigns(value) {
 function normalizeMathSyntax(value) {
   return (value || "")
     .replace(/\\text([A-Za-zÄÖÜäöüß]+)/g, "\\\\text{$1}")
+    .replace(/\\bar\{([A-Za-z])_([0-9])\}/g, "\\\\bar{$1}_$2")
     .replace(/\\bar([A-Za-z])_([0-9])/g, "\\\\bar{$1}_$2")
     .replace(/\\bar([A-Za-z])/g, "\\\\bar{$1}")
     .replace(/\\frac\\partial\s*L\\partial\s*C_0/g, "\\\\frac{\\\\partial L}{\\\\partial C_0}")
     .replace(/\\frac\\partial\s*L\\partial\s*C_1/g, "\\\\frac{\\\\partial L}{\\\\partial C_1}")
     .replace(/\\frac\\partial\s*L\\partial\s*\\lambda/g, "\\\\frac{\\\\partial L}{\\\\partial \\\\lambda}")
     .replace(/\\fracC_1\(1\+i\)/g, "\\\\frac{C_1}{(1+i)}")
+    .replace(
+      /\\frac([0-9]+(?:\.[0-9]{3})*(?:,[0-9]+)?)\s*\\cdot\s*(\([^)]+\)\^\d+)\s*(\([^)]+\)\^\d+-1)/g,
+      "\\\\frac{$1\\\\cdot $2}{$3}"
+    )
     .replace(/\\frac([0-9][0-9.,]*)\(([^)]+)\)(\^[0-9]+)?/g, (_m, num, inner, exp = "") => {
       return `\\\\frac{${num}}{(${inner})${exp}}`;
     })
+    .replace(
+      /\\frac([0-9]+(?:\.[0-9]{3})*(?:,[0-9]+)?)([0-9]+(?:\.[0-9]{3})*(?:,[0-9]+)?)(?![\d.,])/g,
+      "\\\\frac{$1}{$2}"
+    )
+    .replace(
+      /\\frac(\\[A-Za-z]+(?:\{[^}]*\})?(?:\([^)]*\))?)(\\[A-Za-z]+(?:\([^)]*\))?)/g,
+      "\\\\frac{$1}{$2}"
+    )
     .replace(/\\frac(-?\d)(-?\d)(?![\d{])/g, "\\\\frac{$1}{$2}")
     .replace(/\^\s*\\frac(-?\d)(-?\d)(?![\d{])/g, "^\\\\frac{$1}{$2}")
     .replace(/\\sqrt\[([^\]]+)\]([A-Za-z0-9.,]+)/g, "\\\\sqrt[$1]{$2}")
@@ -544,7 +557,8 @@ function renderTextWithInlineMath(line) {
   return parts
     .map((part) => {
       if (part.startsWith("$") && part.endsWith("$")) {
-        return escapeHtml(part);
+        const inner = part.slice(1, -1);
+        return `$${escapeHtml(prepareCellMath(inner))}$`;
       }
       return escapeHtml(part);
     })
