@@ -101,6 +101,36 @@ const embeddedAssetReplacements = {
   "xid-19619317_2": "./assets/thumb-fisher.png",
 };
 
+function preprocessEmbeddedReferences(html) {
+  let output = decodeHtmlEntities(html || "");
+
+  Object.entries(embeddedImageReplacements).forEach(([xid, formula]) => {
+    const replacement = `<span class="inline-formula">${formula}</span>`;
+    output = output.replace(
+      new RegExp(`<img[^>]*${xid}[^>]*>`, "gi"),
+      replacement
+    );
+  });
+
+  Object.entries(embeddedAssetReplacements).forEach(([xid, target]) => {
+    output = output.replace(
+      new RegExp(`href="[^"]*${xid}[^"]*"`, "gi"),
+      `href="${target}"`
+    );
+    output = output.replace(
+      new RegExp(`<img([^>]*)src="[^"]*${xid}[^"]*"([^>]*)>`, "gi"),
+      `<img$1src="${target}" class="embedded-figure"$2>`
+    );
+  });
+
+  output = output.replace(
+    /<img[^>]*@X@EmbeddedFile\.requestUrlStub@X@[^>]*>/gi,
+    ""
+  );
+
+  return output;
+}
+
 function normalizeMinusSigns(value) {
   return (value || "")
     .replace(/([A-Za-zÄÖÜäöü])--([A-Za-zÄÖÜäöü])/g, "$1-$2")
@@ -158,9 +188,8 @@ function rewriteEmbeddedImage(node) {
 }
 
 function cleanHtml(html, options = {}) {
-  const decoded = decodeHtmlEntities(html || "");
   const template = document.createElement("template");
-  template.innerHTML = decoded;
+  template.innerHTML = preprocessEmbeddedReferences(html || "");
 
   const selectors = ["script", "style", "xml", "meta", "link", "applet", "object"];
   if (options.removeImages) {
@@ -185,7 +214,13 @@ function cleanHtml(html, options = {}) {
   template.content.querySelectorAll("*").forEach((node) => {
     [...node.attributes].forEach((attr) => {
       const name = attr.name.toLowerCase();
-      if (name === "style" || name.startsWith("on") || name === "class" || name === "id") {
+      const preserveEmbeddedFigureClass =
+        name === "class" && node.classList.contains("embedded-figure");
+      if (
+        name === "style" ||
+        name.startsWith("on") ||
+        ((name === "class" || name === "id") && !preserveEmbeddedFigureClass)
+      ) {
         node.removeAttribute(attr.name);
       }
     });
@@ -202,6 +237,46 @@ function textOrHtml(node, selector, options = {}) {
 function normalizeQuestionKey(title) {
   const match = (title || "").match(/Aufgabe\s+\d+/);
   return match ? match[0].trim() : (title || "Aufgabe").trim();
+}
+
+function extractSubtaskSolution(solutionText, letter) {
+  if (!solutionText || !letter) {
+    return solutionText || "";
+  }
+
+  const normalizedLetter = letter.toLowerCase();
+  const lines = solutionText.split("\n");
+  const chunks = [];
+  let currentLetter = "";
+  let buffer = [];
+
+  function flush() {
+    if (currentLetter) {
+      chunks.push({ letter: currentLetter, text: buffer.join("\n").trim() });
+    }
+    currentLetter = "";
+    buffer = [];
+  }
+
+  lines.forEach((line) => {
+    const match = line.trim().match(/^([a-z])\)\s*(.*)$/i);
+    if (match) {
+      flush();
+      currentLetter = match[1].toLowerCase();
+      if (match[2]) {
+        buffer.push(match[2]);
+      }
+      return;
+    }
+
+    if (currentLetter) {
+      buffer.push(line);
+    }
+  });
+
+  flush();
+  const found = chunks.find((chunk) => chunk.letter === normalizedLetter);
+  return found ? found.text : solutionText;
 }
 
 function parseQuestion(item, solutionLookup) {
@@ -242,6 +317,13 @@ function parseQuestion(item, solutionLookup) {
     return null;
   }
 
+  const questionKey = normalizeQuestionKey(title);
+  const subtaskMatch = title.match(/Aufgabe\s+\d+([a-z])$/i);
+  let solutionText = solutionLookup[questionKey] || "";
+  if (subtaskMatch && solutionText) {
+    solutionText = extractSubtaskSolution(solutionText, subtaskMatch[1]);
+  }
+
   return {
     title,
     prompt,
@@ -249,7 +331,7 @@ function parseQuestion(item, solutionLookup) {
     min,
     max,
     exact,
-    solutionText: solutionLookup[normalizeQuestionKey(title)] || "",
+    solutionText,
   };
 }
 
@@ -531,8 +613,6 @@ function renderQuestion(question, index) {
   const button = article.querySelector("button");
   const feedback = article.querySelector(".feedback");
 
-  renderMath(article);
-
   function check() {
     const result = evaluateAnswer(question, input.value);
     feedback.className = `feedback is-visible ${
@@ -570,6 +650,7 @@ function renderExerciseSet(meta, data) {
 
   const list = panel.querySelector(".question-list");
   data.items.forEach((question, index) => list.appendChild(renderQuestion(question, index)));
+  renderMath(panel);
 }
 
 async function loadExerciseSet(meta, button) {
