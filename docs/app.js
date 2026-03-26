@@ -128,6 +128,16 @@ const solutionOverrides = {
     "Aufgabe 10":
       "R_0=100.000\\cdot\\frac{1,08^{30}-1}{0,08\\cdot 1,08^{30}}=1.125.778,3",
   },
+  "set2-extra": {
+    "Aufgabe 1":
+      "Hinweis: Die Lösung wird in Tabellenform angezeigt, wenn Sie eine Zahl eingeben, unten die Spaltenüberschriften.\n\nJahr | Schuld Jahresbeginn | Zins | Tilgung | Annuität\n1 | 300.000 | 18.000 | 50.000 | 68.000\n2 | 250.000 | 15.000 | 50.000 | 65.000\n3 | 200.000 | 12.000 | 50.000 | 62.000\n4 | 150.000 | 9.000 | 50.000 | 59.000\n5 | 100.000 | 6.000 | 50.000 | 56.000\n6 | 50.000 | 3.000 | 50.000 | 53.000",
+    "Aufgabe 4":
+      "zuerst\n\n$K_4=50.000\\cdot 1,08^4=68.024,45$\n\ndann Rente\n\n$r=R_0\\frac{iq^n}{q^n-1}=68.024,45\\cdot\\frac{0,08\\cdot 1,08^{5}}{1,08^{5}-1}=17.037,16$",
+    "Aufgabe 6":
+      "Anlage 2 ist besser.\n\nAnlage 1\nZeitpunkt | $t=0$ | $t=1$ | $t=2$ | $t=3$\nBasiszahlung | 6 |  |  | \nAnlage 1 | -5 | 2 | 10 | 5\nErgänzungsinv. 0 | -1 | 1,12 | 3,4048 | 14,923776\nErgänzungsinv. 1 |  | -3,04 | -13,3248 | \nEntnahme | 0 | 0,08 | 0,08 | 0,08\n\n |  |  | $\\mathbf{Endvermögen}$ | $\\mathbf{19,843776}$\n\nAnlage 2\nZeitpunkt | $t=0$ | $t=1$ | $t=2$ | $t=3$\nBasiszahlung | 6 |  |  | \nAnlage 2 | -7 | 10 | 5 | 6\nErgänzungsfin. 0 | 1 | -1,2 | 9,7664 | 16,448768\nErgänzungsinv. 1 |  | -8,72 | -14,6864 | \nEntnahme | 0 | 0,08 | 0,08 | 0,08\n\n |  |  | $\\mathbf{Endvermögen}$ | $\\mathbf{22,368768}$",
+    "Aufgabe 7":
+      "Der Rentenendwert ist um Steuern und Ausgaben anzupassen.\n\n$$\nR_n=(r\\cdot (1-s)-K)\\cdot\\frac{(1+i)^n-1}{i}\n$$\n\n$$\n\\Longrightarrow r=\\left(R_n\\frac{i}{(1+i)^n-1}+K\\right)\\cdot\\frac{1}{1-s}\n$$\n\n$$\n=\\left(3.000.000\\cdot\\frac{0,015}{(1+0,015)^4-1}+60.000\\right)\\cdot\\frac{1}{1-0,47}\n$$\n\n$$\n=1.496.857\n$$",
+  },
   set3: {
     "Aufgabe 5a":
       "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\bigl(C_1-(1+i)\\cdot(\\bar{C}_0-C_0)\\bigr).",
