@@ -498,6 +498,15 @@ a:hover {
   height: auto;
 }
 
+.question-body img.embedded-figure {
+  display: block;
+  margin: 1rem auto;
+  max-width: min(32rem, 100%);
+  border: 1px solid rgba(18, 65, 112, 0.14);
+  border-radius: 0.85rem;
+  background: white;
+}
+
 .answer-row {
   display: flex;
   flex-wrap: wrap;

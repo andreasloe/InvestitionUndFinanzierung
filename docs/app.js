@@ -96,6 +96,11 @@ const embeddedImageReplacements = {
   "xid-19619314_2": "$\\bar{C_0}$",
 };
 
+const embeddedAssetReplacements = {
+  "xid-19619316_2": "./lectures/03_fisher.pdf",
+  "xid-19619317_2": "./assets/thumb-fisher.png",
+};
+
 function normalizeMinusSigns(value) {
   return (value || "")
     .replace(/([A-Za-zÄÖÜäöü])--([A-Za-zÄÖÜäöü])/g, "$1-$2")
@@ -103,8 +108,21 @@ function normalizeMinusSigns(value) {
     .replace(/(^|[|(=\s])-\s+(?=\d)/g, "$1-");
 }
 
+function normalizeMathSyntax(value) {
+  return (value || "")
+    .replace(/\\bar([A-Za-z])_([0-9])/g, "\\\\bar{$1}_$2")
+    .replace(/\\bar([A-Za-z])/g, "\\\\bar{$1}")
+    .replace(/\\frac\\partial\s*L\\partial\s*C_0/g, "\\\\frac{\\\\partial L}{\\\\partial C_0}")
+    .replace(/\\frac\\partial\s*L\\partial\s*C_1/g, "\\\\frac{\\\\partial L}{\\\\partial C_1}")
+    .replace(/\\frac\\partial\s*L\\partial\s*\\lambda/g, "\\\\frac{\\\\partial L}{\\\\partial \\\\lambda}")
+    .replace(/\\fracC_1\(1\+i\)/g, "\\\\frac{C_1}{(1+i)}")
+    .replace(/\\frac(-?\d)(-?\d)(?![\d{])/g, "\\\\frac{$1}{$2}")
+    .replace(/\^\s*\\frac(-?\d)(-?\d)(?![\d{])/g, "^\\\\frac{$1}{$2}")
+    .replace(/\\lambda/g, "\\\\lambda");
+}
+
 function prepareCellMath(value) {
-  return normalizeMinusSigns(value)
+  return normalizeMathSyntax(normalizeMinusSigns(value))
     .replace(/\$\s*/g, "$")
     .replace(/\s*\$/g, "$")
     .trim();
@@ -119,7 +137,17 @@ function rewriteEmbeddedImage(node) {
   const src = node.getAttribute("src") || "";
   const match = src.match(/xid-\d+_\d+/);
   const replacement = match ? embeddedImageReplacements[match[0]] : "";
+  if (!replacement && match && embeddedAssetReplacements[match[0]]) {
+    node.setAttribute("src", embeddedAssetReplacements[match[0]]);
+    node.classList.add("embedded-figure");
+    node.setAttribute("alt", "Abbildung aus den Folien");
+    return;
+  }
+
   if (!replacement) {
+    if (src.includes("@X@EmbeddedFile.requestUrlStub@X@")) {
+      node.remove();
+    }
     return;
   }
 
@@ -143,6 +171,15 @@ function cleanHtml(html, options = {}) {
 
   if (!options.removeImages) {
     template.content.querySelectorAll("img").forEach((node) => rewriteEmbeddedImage(node));
+    template.content.querySelectorAll("a").forEach((node) => {
+      const href = node.getAttribute("href") || "";
+      const match = href.match(/xid-\d+_\d+/);
+      if (match && embeddedAssetReplacements[match[0]]) {
+        node.setAttribute("href", embeddedAssetReplacements[match[0]]);
+      } else if (href.includes("@X@EmbeddedFile.requestUrlStub@X@")) {
+        node.removeAttribute("href");
+      }
+    });
   }
 
   template.content.querySelectorAll("*").forEach((node) => {
