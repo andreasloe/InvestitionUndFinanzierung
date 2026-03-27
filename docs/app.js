@@ -100,15 +100,19 @@ const embeddedImageReplacements = {
 const solutionOverrides = {
   set1: {
     "Aufgabe 2":
-      "$\\text{Geldbetrag}=x$ setzen.\n\nx\\cdot (1+i)^{20}=3x\n\n(1+i)^{20}=3\n\ni=\\sqrt[20]{3}-1=5,6467\\%",
+      "$\\text{Geldbetrag}=x$ setzen.\n\n$x\\cdot (1+i)^{20}=3x$\n\n$(1+i)^{20}=3$\n\n$i=\\sqrt[20]{3}-1=5,6467\\%$",
     "Aufgabe 4":
-      "15.000\\times (1+0,065)^n=2\\times 15.000\n\n(1+0,065)^n=2\n\nn\\ln(1+0,065)=\\ln(2)\n\nn=\\frac{\\ln(2)}{\\ln(1+0,065)}=11,007\\ \\text{Jahre}",
+      "$15.000\\times (1+0,065)^n=2\\times 15.000$\n\n$(1+0,065)^n=2$\n\n$n\\ln(1+0,065)=\\ln(2)$\n\n$n=\\frac{\\ln(2)}{\\ln(1+0,065)}=11,007\\ \\text{Jahre}$",
     "Aufgabe 5":
-      "15.500\\times (1+i)^{13}=35.146,06\n\ni=\\sqrt[13]{\\frac{35.146,06}{15.500}}=6,5\\%",
+      "$15.500\\times (1+i)^{13}=35.146,06$\n\n$i=\\sqrt[13]{\\frac{35.146,06}{15.500}}=6,5\\%$",
+    "Aufgabe 6":
+      "$K_0=\\frac{20.000}{(1+0,055)^{18}}=7.629,32$",
     "Aufgabe 7":
       "r=18.770,15\\frac{0,04\\cdot (1+0,04)^{12}}{(1+0,04)^{12}-1}=2.000",
     "Aufgabe 8":
       "R_0=700\\cdot \\frac{(1+0,05)^{10}-1}{0,05\\cdot (1+0,05)^{10}}=5.405,21",
+    "Aufgabe 9":
+      "$R_0=1.000\\cdot \\frac{(1+0,04)^{25}-1}{0,04\\cdot (1+0,04)^{25}}=15.622,08$",
     "Aufgabe 10":
       "R_0=55.000\\cdot\\frac{1,06^{20}-1}{0,06\\cdot 1,06^{20}}=630.845,67",
   },
@@ -118,27 +122,33 @@ const solutionOverrides = {
     "Aufgabe 6":
       "Projekt B ist besser.\n\nProjekt A\nZeitpunkt | $t=0$ | $t=1$ | $t=2$\nBasiszahlungen $M_t$ | 1.000 |  | \nEntnahmen $C_t$ | 0 | 50 | 50\nCashflows $CF_t$ | -900 | 0 | 1.700\nZinsen $Z_t$ | 0 | $100\\cdot 15\\%=15$ | $65\\cdot 15\\%=9,75$\nKontostand $K_t$ | 100 | $100-50+15=65$ | 1.724,75\n\nProjekt B\nZeitpunkt | $t=0$ | $t=1$ | $t=2$\nBasiszahlungen $M_t$ | 1.000 |  | \nEntnahmen $C_t$ | 0 | 50 | 50\nCashflows $CF_t$ | -1.300 | 2.000 | \nZinsen $Z_t$ | 0 | $-300\\cdot 25\\%=-75$ | $1.575\\cdot 15\\%=236,25$\nKontostand $K_t$ | -300 | 1.575 | 1.761,25",
     "Aufgabe 7":
-      "Wir verwenden die NPV-Gleichung mit Steuern\n\n$$\nNPV^s=-I_0+\\sum_{t=1}^T \\frac{CF_t-s(CF_t-AfA)}{(1+i(1-s))^t}.\n$$\n\nWir erhalten zuerst für die Abschreibungen des ersten Projektes $AfA(A)=450$ sowie $AfA(B)=650$. Damit ergibt sich\n\n$$\nNPV^s(A)=-900+\\frac{33\\%\\cdot 450}{(1+20\\%(1-33\\%))}+ \\frac{1700-33\\%\\cdot (1700-450)}{(1+20\\%(1-33\\%))^2}\n$$\n\n$$\n\\approx 232,15\n$$\n\nsowie\n\n$$\nNPV^s(B)=-1300+\\frac{2000-33\\%\\cdot (2000-650)}{(1+20\\%(1-33\\%))}+ \\frac{33\\%\\cdot 650}{(1+20\\%(1-33\\%))^2}\n$$\n\n$$\n\\approx 237,61\n$$",
+      "Wir verwenden die NPV-Gleichung mit Steuern\n\n$NPV^s=-I_0+\\sum_{t=1}^T \\frac{CF_t-s(CF_t-AfA)}{(1+i(1-s))^t}.$\n\nWir erhalten zuerst für die Abschreibungen des ersten Projektes $AfA(A)=450$ sowie $AfA(B)=650$. Damit ergibt sich\n\n$NPV^s(A)=-900+\\frac{33\\%\\cdot 450}{(1+20\\%(1-33\\%))}+ \\frac{1700-33\\%\\cdot (1700-450)}{(1+20\\%(1-33\\%))^2}$\n\n$\\approx 232,15$\n\nsowie\n\n$NPV^s(B)=-1300+\\frac{2000-33\\%\\cdot (2000-650)}{(1+20\\%(1-33\\%))}+ \\frac{33\\%\\cdot 650}{(1+20\\%(1-33\\%))^2}$\n\n$\\approx 237,61$",
   },
   "set1-extra": {
+    "Aufgabe 6":
+      "$K_0=\\frac{50.000}{(1+0,065)^{35}}=5.517,39$",
     "Aufgabe 7":
       "r=1.000.000\\frac{0,05\\cdot (1+0,05)^{30}}{(1+0,05)^{30}-1}=65.051,44",
     "Aufgabe 9":
       "R_0=500\\,\\frac{(1+0,05)^{20}-1}{0,05\\cdot (1+0,05)^{20}}=6.231,105",
     "Aufgabe 10":
       "R_0=100.000\\cdot\\frac{1,08^{30}-1}{0,08\\cdot 1,08^{30}}=1.125.778,3",
+    "Aufgabe 11":
+      "Der Zinssatz ist 13,7698\\%.\n\nDie Funktion $f(i)$ ist durch die Bedingung gekennzeichnet, dass der Endwert gleich 16.450 ist. Dann gilt\n\n$f(i)=2.500+2.500(1+i)+2.500\\cdot(1+i)^2+2.500\\cdot(1+i)^3+2.500\\cdot(1+i)^4-16.450$\n\nwobei wir als nächsten Zinssatz immer denjenigen nehmen, der neben dem letzten Zinssatz ein anderes Vorzeichen besitzt:\n\nk | $i_k$ | $f(i)$\n0 | 10\\% | -1187,25000\n1 | 15\\% | 405,95310\n2 | 13,7259844\\% | -14,28474205\n3 | 13,7692908\\% | -0,163159932\n4 | 13,7697852\\% | -0,001862482",
   },
   "set2-extra": {
     "Aufgabe 1":
-      "Hinweis: Die Lösung wird in Tabellenform angezeigt, wenn Sie eine Zahl eingeben, unten die Spaltenüberschriften.\n\nJahr | Schuld Jahresbeginn | Zins | Tilgung | Annuität\n1 | 300.000 | 18.000 | 50.000 | 68.000\n2 | 250.000 | 15.000 | 50.000 | 65.000\n3 | 200.000 | 12.000 | 50.000 | 62.000\n4 | 150.000 | 9.000 | 50.000 | 59.000\n5 | 100.000 | 6.000 | 50.000 | 56.000\n6 | 50.000 | 3.000 | 50.000 | 53.000",
+      "github erlaubt keine Tabelleneingabe. um die Musterlösung zu sehen, geben Sie einen falschen Wert (also gerade nicht die Annuität) ein.\n\nJahr | Schuld Jahresbeginn | Zins | Tilgung | Annuität\n1 | 300.000 | 18.000 | 50.000 | 68.000\n2 | 250.000 | 15.000 | 50.000 | 65.000\n3 | 200.000 | 12.000 | 50.000 | 62.000\n4 | 150.000 | 9.000 | 50.000 | 59.000\n5 | 100.000 | 6.000 | 50.000 | 56.000\n6 | 50.000 | 3.000 | 50.000 | 53.000",
     "Aufgabe 4":
       "zuerst\n\n$K_4=50.000\\cdot 1,08^4=68.024,45$\n\ndann Rente\n\n$r=R_0\\frac{iq^n}{q^n-1}=68.024,45\\cdot\\frac{0,08\\cdot 1,08^{5}}{1,08^{5}-1}=17.037,16$",
     "Aufgabe 6":
       "Anlage 2 ist besser.\n\nAnlage 1\nZeitpunkt | $t=0$ | $t=1$ | $t=2$ | $t=3$\nBasiszahlung | 6 |  |  | \nAnlage 1 | -5 | 2 | 10 | 5\nErgänzungsinv. 0 | -1 | 1,12 | 3,4048 | 14,923776\nErgänzungsinv. 1 |  | -3,04 | -13,3248 | \nEntnahme | 0 | 0,08 | 0,08 | 0,08\n\n |  |  | $\\mathbf{Endvermögen}$ | $\\mathbf{19,843776}$\n\nAnlage 2\nZeitpunkt | $t=0$ | $t=1$ | $t=2$ | $t=3$\nBasiszahlung | 6 |  |  | \nAnlage 2 | -7 | 10 | 5 | 6\nErgänzungsfin. 0 | 1 | -1,2 | 9,7664 | 16,448768\nErgänzungsinv. 1 |  | -8,72 | -14,6864 | \nEntnahme | 0 | 0,08 | 0,08 | 0,08\n\n |  |  | $\\mathbf{Endvermögen}$ | $\\mathbf{22,368768}$",
     "Aufgabe 7":
-      "Der Rentenendwert ist um Steuern und Ausgaben anzupassen.\n\n$$\nR_n=(r\\cdot (1-s)-K)\\cdot\\frac{(1+i)^n-1}{i}\n$$\n\n$$\n\\Longrightarrow r=\\left(R_n\\frac{i}{(1+i)^n-1}+K\\right)\\cdot\\frac{1}{1-s}\n$$\n\n$$\n=\\left(3.000.000\\cdot\\frac{0,015}{(1+0,015)^4-1}+60.000\\right)\\cdot\\frac{1}{1-0,47}\n$$\n\n$$\n=1.496.857\n$$",
+      "Der Rentenendwert ist um Steuern und Ausgaben anzupassen.\n\n$R_n=(r\\cdot (1-s)-K)\\cdot\\frac{(1+i)^n-1}{i}$\n\n$\\Longrightarrow r=\\left(R_n\\frac{i}{(1+i)^n-1}+K\\right)\\cdot\\frac{1}{1-s}$\n\n$=\\left(3.000.000\\cdot\\frac{0,015}{(1+0,015)^4-1}+60.000\\right)\\cdot\\frac{1}{1-0,47}$\n\n$=1.496.857$",
   },
   set3: {
+    "Aufgabe 1":
+      "$\\text{Kredit}\\times \\text{Annuitätenfaktor}=\\text{Annuität}\\rightarrow \\text{Kredit}=\\frac{100.000}{\\frac{1,05^{5}\\cdot 0,05}{1,05^{5}-1}}=432.947,67$",
     "Aufgabe 5a":
       "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\bigl(C_1-(1+i)\\cdot(\\bar{C}_0-C_0)\\bigr).",
     "Aufgabe 5b":
@@ -147,7 +157,39 @@ const solutionOverrides = {
       "-(1+i)=-\\frac{\\frac{3}{5}C_0^{\\frac{-2}{5}}\\cdot C_1^{\\frac{2}{5}}}{\\frac{2}{5}C_0^{\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}}}.",
     "Aufgabe 5d": "\\bar{C}_0=\\frac{C_1}{1+i}+C_0",
     "Aufgabe 6a": "(1+i) \\cdot C_0 = 250.\nPunkt A auf der Grafik.",
-    "Aufgabe 6b": "C_0=166,67.\nPunkt D auf der Grafik.",
+    "Aufgabe 6b": "$C_0=166,67$\nPunkt D auf der Grafik.",
+  },
+  set4: {
+    "Aufgabe 1a":
+      "$V^\\text{fair}=\\frac{\\frac{1}{2}150+\\frac{1}{2}90}{1+10\\%}=109,09$",
+    "Aufgabe 1c":
+      "$105,63=\\frac{\\frac{1}{2}150+\\frac{1}{2}90}{1+k}\\quad\\Longrightarrow\\quad k=13,608\\%$",
+    "Aufgabe 1d":
+      "$105,63=\\frac{q(\\text{auf})\\cdot 150+(1-q(\\text{auf}))\\cdot 90}{1+10\\%}\\quad\\Longrightarrow\\quad q(\\text{auf})=43,649\\%$",
+    "Aufgabe 2b":
+      "$107,36=\\frac{\\frac{1}{2}150+\\frac{1}{2}90}{1+k}\\quad\\Longrightarrow\\quad k=11,775\\%$",
+    "Aufgabe 2c":
+      "$107,36=\\frac{q(\\text{auf})\\cdot 150+(1-q(\\text{auf}))\\cdot 90}{1+10\\%}\\quad\\Longrightarrow\\quad q(\\text{auf})=46,825\\%$",
+    "Aufgabe 3":
+      "Es gilt\n\n$f(i)= -1500 +\\frac{800}{(1+i)^1}+\\frac{600}{(1+i)^2}+\\frac{100}{(1+i)^3}+\\frac{200}{(1+i)^4}$\n\nMit einem Näherungsverfahren erhält man die Lösung, siehe Abbildung [4.3].\n\nSchritt | Zinssatz | NPV\n0 | 0,000000\\% | 200\n1 | 10\\% | -65,12533\n2 | 7,5436\\% | -7,421405\n3 | 7,2737\\% | -0,81722\n4 | 7,2441\\% | -0,0896363\n5 | 7,2409\\% | -0,010939\n6 | 7,2405\\% | -0,0011",
+    "Aufgabe 4":
+      "Bei der Berechnung des internen Zinses werden nur Zahlungen, die direkt mit der Investition zusammenhängen, berücksichtigt. Das heißt Basiszahlungen sowie Entnahmen werden hier nicht in Betracht gezogen. Die von den Investitionsprojekten A und B (und auch von der Unterlassung, trivialerweise gleich Null) generierten Zahlungen sind in der folgenden Tabelle gegeben:\n\nZeitpunkte | $t=0$ | $t=1$ | $t=2$ | $t=3$ | $t=4$\nProjekt A Cashflows | $CF_t$ | -3.000 | 1.000 | 1.100 | 800 | 700\nProjekt B Cashflows | $CF_t$ | -4.000 | 2.000 | -800 | 1.500 | 2.100\nUnterlassung Cashflows | $CF_t$ | 0 | 0 | 0 | 0 | 0\n\n$\\text{NPV}=f(i)= -3000 +\\frac{1000}{(1+i)^1}+\\frac{1100}{(1+i)^2}+\\frac{800}{(1+i)^3}+\\frac{700}{(1+i)^4}=0$\n\nMithilfe eines Näherungsverfahrens bekommt man den internen Zinssatz der Investition A von $8,30\\%$.\n\nk | $i_k$ | $f(i_k)=\\text{NPV}$\n0 | 0 | 600\n1 | 0,1 | -102,65692\n2 | 0,085390 | -14,914748\n3 | 0,083319 | -2,11691\n4 | 0,083026 | -0,2988986\n5 | 0,082985 | -0,044353\n6 | 0,082997 | -0,11886\n\nAnalog beträgt der interne Zinssatz der Investition B $6,96\\%$:\n\nk | $i_k$ | $f(i_k)=\\text{NPV}$\n0 | 0 | 800\n1 | 0,1 | -281,67475\n2 | 0,073959 | -41,798008\n3 | 0,070287 | -5,8943356\n4 | 0,69773 | -0,8254203\n5 | 0,69701 | -0,1145245\n6 | 0,069691 | -0,0157724\n\nDie Unterlassungsalternative hat einen internen Zinssatz von Null.",
+  },
+  "set4-extra": {
+    "Aufgabe 1a":
+      "$V^\\text{fair}=\\frac{0,3\\cdot 250+0,7\\cdot 100}{1+10\\%}=131,82$",
+    "Aufgabe 1c":
+      "$119,67=\\frac{0,3\\cdot 250+0,7\\cdot 100}{1+k}\\quad\\Longrightarrow\\quad k=21,165\\%$",
+    "Aufgabe 1d":
+      "$119,67=\\frac{q(\\text{auf})\\cdot 250+(1-q(\\text{auf}))\\cdot 100}{1+10\\%}\\quad\\Longrightarrow\\quad q(\\text{auf})=21,092\\%$",
+    "Aufgabe 2b":
+      "$125,371=\\frac{0,3\\cdot 250+0,7\\cdot 100}{1+k}\\quad\\Longrightarrow\\quad k=15,657\\%$",
+    "Aufgabe 2c":
+      "$125,371=\\frac{q(\\text{auf})\\cdot 250+(1-q(\\text{auf}))\\cdot 100}{1+10\\%}\\quad\\Longrightarrow\\quad q(\\text{auf})=25,272\\%$",
+    "Aufgabe 3":
+      "$NPV=f(i)=-I_0+\\sum_{t=1}^4\\frac{CF_t}{(1+i)^t}$\n\n$=-1.000+\\frac{600}{1+i}+\\frac{600}{(1+i)^2}+\\frac{0}{(1+i)^3}+\\frac{100}{(1+i)^4}$",
+    "Aufgabe 4":
+      "$\\text{NPV}=-I_0+\\sum_{t=1}^T \\frac{CF_t}{(1+i)^t}=0$\n\n$\\text{NPV}=f(i)= -6000 +\\frac{100}{(1+i)^1}+\\frac{200}{(1+i)^2}+\\frac{6.000}{(1+i)^3}+\\frac{2.800}{(1+i)^4}=0$",
   },
 };
 
@@ -157,6 +199,12 @@ const promptOverrides = {
       replace:
         '<p><em>Anmerkung</em>: github erlaubt es nicht, dass Sie hier Formeln eingeben. Wir haben daher Zahlen als Lösung (100) hinterlegt, damit man wenigstens die Musterlösung (die dann natürlich eine Formel und keine Zahl sein wird) sehen kann. Sie können irgendeine Zahl eingeben, damit Sie die richtigen Gleichungen sehen.</p>',
     },
+  },
+  "set4-extra": {
+    "Aufgabe 1c": { removeHint: true, removeLeadingLabel: true },
+    "Aufgabe 1d": { removeLeadingLabel: true },
+    "Aufgabe 2b": { removeLeadingLabel: true },
+    "Aufgabe 2c": { removeHint: true },
   },
 };
 
@@ -193,11 +241,15 @@ function applyPromptOverride(setId, title, prompt) {
   return (prompt || "")
     .replace(
       /<p><em>Anmerkung<\/em>:[\s\S]*?sehen\.<\/p>/i,
-      override.replace
+      override.replace || (override.removeHint ? "" : "$&")
     )
     .replace(
       /<p>Außerdem zählt Blackboard anders als wir\.[\s\S]*?nummeriert\.<\/p>/i,
       ""
+    )
+    .replace(
+      /<p>\s*[a-d][\.\)]\s*/i,
+      override.removeLeadingLabel ? "<p>" : "$&"
     );
 }
 
