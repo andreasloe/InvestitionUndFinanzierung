@@ -205,6 +205,7 @@ const promptOverrides = {
     "Aufgabe 1d": { removeLeadingLabel: true },
     "Aufgabe 2b": { removeLeadingLabel: true },
     "Aufgabe 2c": { removeHint: true },
+    "Aufgabe 2": { removeSpecificText: "Anmerkung: Geben Sie in die Maske des Virtuellen Tutoriums folgende Zahlenwerte ein: Vfair (in €), k (in %) und q(auf) (in %)." },
   },
 };
 
@@ -250,6 +251,17 @@ function applyPromptOverride(setId, title, prompt) {
     .replace(
       /<p>\s*[a-d][\.\)]\s*/i,
       override.removeLeadingLabel ? "<p>" : "$&"
+    )
+    .replace(
+      override.removeSpecificText
+        ? new RegExp(
+            `<p>\\s*${override.removeSpecificText
+              .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+              .replace(/\s+/g, "\\s+")}\\s*<\\/p>`,
+            "i"
+          )
+        : /$^/,
+      ""
     );
 }
 
