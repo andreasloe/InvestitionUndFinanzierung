@@ -195,6 +195,7 @@ a:hover {
   justify-content: space-between;
   gap: 0.75rem;
   margin-bottom: 0.1rem;
+  flex-wrap: nowrap;
 }
 
 .section {
@@ -411,6 +412,8 @@ a:hover {
   font-weight: 600;
   line-height: 1.4;
   white-space: nowrap;
+  flex: 0 0 auto;
+  text-align: right;
 }
 
 .exercise-intro {
