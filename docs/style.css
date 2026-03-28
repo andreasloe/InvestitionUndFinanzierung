@@ -400,6 +400,11 @@ a:hover {
   font-weight: 700;
 }
 
+.link-row .login-note {
+  font-weight: 400;
+  color: var(--muted);
+}
+
 .lecture-duration {
   color: var(--muted);
   font-size: 0.95rem;
