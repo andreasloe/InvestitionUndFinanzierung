@@ -1,4 +1,4 @@
-const assetVersion = "20260523-1";
+const assetVersion = "20260523-2";
 
 const exerciseSets = [
   {
