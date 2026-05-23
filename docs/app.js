@@ -154,7 +154,7 @@ const solutionOverrides = {
     "Aufgabe 5b":
       "\\frac{\\partial L}{\\partial \\lambda}=C_1-(1+i)\\cdot(\\bar{C}_0-C_0)=0.",
     "Aufgabe 5c":
-      "-(1+i)=-\\frac{\\frac{3}{5}C_0^{\\frac{-2}{5}}\\cdot C_1^{\\frac{2}{5}}}{\\frac{2}{5}C_0^{\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}}}.",
+      "-(1+i)=-\\frac{\\frac{3}{5}C_0^{\\frac{-2}{5}}\\cdot C_1^{\\frac{2}{5}}}{\\frac{2}{5}C_0^{\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}}}=-\\frac{3}{2}\\frac{C_1}{C_0}.",
     "Aufgabe 5d": "\\bar{C}_0=\\frac{C_1}{1+i}+C_0",
     "Aufgabe 6a": "(1+i) \\cdot C_0 = 250.\nPunkt A auf der Grafik.",
     "Aufgabe 6b": "$C_0=166,67$\nPunkt D auf der Grafik.",
