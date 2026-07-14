@@ -1,61 +1,101 @@
-const assetVersion = "20260523-3";
+const assetVersion = "20260714-1";
+
+const exerciseSourceFiles = {
+  set1: "./qti/set1.xml",
+  "set1-extra": "./qti/set1_extra.xml",
+  set2: "./qti/set2.xml",
+  "set2-extra": "./qti/set2_extra.xml",
+  set3: "./qti/set3.xml",
+  "set3-extra": "./qti/set3_extra.xml",
+  set4: "./qti/set4.xml",
+  "set4-extra": "./qti/set4_extra.xml",
+};
+
+function numberedSourceItems(groups) {
+  let nextNumber = 1;
+  return groups.flatMap(({ sourceSetId, numbers }) =>
+    numbers.map((number) => ({
+      sourceSetId,
+      sourceTitle: `Aufgabe ${number}`,
+      title: `Aufgabe ${nextNumber++}`,
+    }))
+  );
+}
 
 const exerciseSets = [
   {
-    id: "set1",
-    title: "Aufgabenset 1",
-    description: "Finanzmathematik",
-    file: "./qti/set1.xml",
+    id: "finanzmathematik",
+    title: "Aufgabenset Finanzmathematik",
+    description: "1. Finanzmathematik",
     resources: [],
+    items: numberedSourceItems([
+      { sourceSetId: "set1", numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+      { sourceSetId: "set1-extra", numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11] },
+      { sourceSetId: "set2", numbers: [1, 2, 3, 4, 5] },
+      { sourceSetId: "set2-extra", numbers: [1, 2, 3, 4, 5] },
+      { sourceSetId: "set3", numbers: [1, 2] },
+      { sourceSetId: "set3-extra", numbers: [1, 2] },
+    ]),
   },
   {
-    id: "set1-extra",
-    title: "Zusatzaufgaben Set 1",
-    description: "Ergänzende Aufgaben zu Finanzmathematik",
-    file: "./qti/set1_extra.xml",
+    id: "sicherheit",
+    title: "Aufgabenset Investitionsrechnung unter Sicherheit",
+    description: "2. Investitionsrechnung unter Sicherheit",
     resources: [],
+    items: numberedSourceItems([
+      { sourceSetId: "set2", numbers: [6] },
+      { sourceSetId: "set2-extra", numbers: [6] },
+      { sourceSetId: "set3", numbers: [3, 4] },
+      { sourceSetId: "set3-extra", numbers: [3, 4] },
+      { sourceSetId: "set4", numbers: [3, 4] },
+      { sourceSetId: "set4-extra", numbers: [3, 4] },
+    ]),
   },
   {
-    id: "set2",
-    title: "Aufgabenset 2",
-    description: "Investitionsrechnung unter Sicherheit",
-    file: "./qti/set2.xml",
+    id: "steuern",
+    title: "Aufgabenset Investitionsrechnung mit Steuern",
+    description: "2b. Investitionsrechnung mit Steuern",
     resources: [],
+    items: numberedSourceItems([
+      { sourceSetId: "set2", numbers: [7] },
+      { sourceSetId: "set2-extra", numbers: [7] },
+    ]),
   },
   {
-    id: "set2-extra",
-    title: "Zusatzaufgaben Set 2",
-    description: "Ergänzungen zu Sicherheit und Steuern",
-    file: "./qti/set2_extra.xml",
+    id: "fisher",
+    title: "Aufgabenset Fisher-Modell",
+    description: "3. Fisher-Modell",
     resources: [],
+    items: [
+      { sourceSetId: "set3", sourceTitle: "Aufgabe 5a", title: "Aufgabe 1a" },
+      { sourceSetId: "set3", sourceTitle: "Aufgabe 5b", title: "Aufgabe 1b" },
+      { sourceSetId: "set3", sourceTitle: "Aufgabe 5c", title: "Aufgabe 1c" },
+      { sourceSetId: "set3", sourceTitle: "Aufgabe 5d", title: "Aufgabe 1d" },
+      { sourceSetId: "set3", sourceTitle: "Aufgabe 6a", title: "Aufgabe 2a" },
+      { sourceSetId: "set3", sourceTitle: "Aufgabe 6d", title: "Aufgabe 2b" },
+    ],
   },
   {
-    id: "set3",
-    title: "Aufgabenset 3",
-    description: "Fisher-Modell",
-    file: "./qti/set3.xml",
+    id: "unsicherheit",
+    title: "Aufgabenset Investitionsrechnung unter Unsicherheit",
+    description: "4. Investitionsrechnung unter Unsicherheit",
     resources: [],
-  },
-  {
-    id: "set3-extra",
-    title: "Zusatzaufgaben Set 3",
-    description: "Weitere Aufgaben zum Fisher-Modell",
-    file: "./qti/set3_extra.xml",
-    resources: [],
-  },
-  {
-    id: "set4",
-    title: "Aufgabenset 4",
-    description: "Investitionsrechnung unter Unsicherheit",
-    file: "./qti/set4.xml",
-    resources: [],
-  },
-  {
-    id: "set4-extra",
-    title: "Zusatzaufgaben Set 4",
-    description: "Vertiefung und zusätzliche Rechenaufgaben",
-    file: "./qti/set4_extra.xml",
-    resources: [],
+    items: [
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 1a", title: "Aufgabe 1a" },
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 1b", title: "Aufgabe 1b" },
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 1c", title: "Aufgabe 1c" },
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 1d", title: "Aufgabe 1d" },
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 2a", title: "Aufgabe 2a" },
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 2b", title: "Aufgabe 2b" },
+      { sourceSetId: "set4", sourceTitle: "Aufgabe 2c", title: "Aufgabe 2c" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 1a", title: "Aufgabe 3a" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 1b", title: "Aufgabe 3b" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 1c", title: "Aufgabe 3c" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 1d", title: "Aufgabe 3d" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 2a", title: "Aufgabe 4a" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 2b", title: "Aufgabe 4b" },
+      { sourceSetId: "set4-extra", sourceTitle: "Aufgabe 2c", title: "Aufgabe 4c" },
+    ],
   },
 ];
 
@@ -208,6 +248,52 @@ const promptOverrides = {
     "Aufgabe 2": { removeSpecificText: "Anmerkung: Geben Sie in die Maske des Virtuellen Tutoriums folgende Zahlenwerte ein: Vfair (in €), k (in %) und q(auf) (in %)." },
   },
 };
+
+const internalReferenceReplacements = {
+  "set3:Aufgabe 5a": [
+    ["Teilaufgaben 5a bis 5d", "Teilaufgaben 1a bis 1d"],
+  ],
+  "set4:Aufgabe 1a": [
+    [
+      "Unsichere Cashflows des Projektes in Set 4, Aufgabe 1",
+      "Unsichere Cashflows des Projektes im Aufgabenset Investitionsrechnung unter Unsicherheit, Aufgabe 1",
+    ],
+  ],
+  "set4:Aufgabe 2a": [
+    [
+      "Unsichere Cashflows des Projektes in Set 4, Aufgabe 2",
+      "Unsichere Cashflows des Projektes im Aufgabenset Investitionsrechnung unter Unsicherheit, Aufgabe 2",
+    ],
+  ],
+  "set4:Aufgabe 4": [
+    [
+      "aus Set 3, Aufgabe 4",
+      "aus dem Aufgabenset Investitionsrechnung unter Sicherheit, Aufgabe 4",
+    ],
+  ],
+  "set4-extra:Aufgabe 1a": [
+    [
+      "Unsichere Cashflows des Projektes in Set 4, Aufgabe 1",
+      "Unsichere Cashflows des Projektes im Aufgabenset Investitionsrechnung unter Unsicherheit, Aufgabe 3",
+    ],
+  ],
+  "set4-extra:Aufgabe 2a": [
+    ["Siehe Abbildung in Aufgabe 1.", "Siehe Abbildung in Aufgabe 3."],
+  ],
+  "set4-extra:Aufgabe 4": [
+    [
+      "aus Set 3, Aufgabe 4",
+      "aus dem Aufgabenset Investitionsrechnung unter Sicherheit, Aufgabe 4",
+    ],
+  ],
+};
+
+function updateInternalReferences(setId, title, prompt) {
+  return (internalReferenceReplacements[`${setId}:${title}`] || []).reduce(
+    (output, [from, to]) => output.replaceAll(from, to),
+    prompt
+  );
+}
 
 function preprocessEmbeddedReferences(html) {
   let output = decodeHtmlEntities(html || "");
@@ -504,7 +590,7 @@ function questionOverride(setId, title) {
   };
 }
 
-function parseQuestion(item, solutionLookup, setId) {
+function parseQuestion(item, solutionLookup, setId, displayTitle = "") {
   const type = item.querySelector("bbmd_questiontype")?.textContent?.trim() || "";
   if (type !== "Numeric") {
     return null;
@@ -516,11 +602,16 @@ function parseQuestion(item, solutionLookup, setId) {
     return null;
   }
 
-  const title = override.title || sourceTitle;
-  const prompt = applyPromptOverride(
+  const legacyTitle = override.title || sourceTitle;
+  const title = displayTitle || legacyTitle;
+  const prompt = updateInternalReferences(
     setId,
     sourceTitle,
-    textOrHtml(item, "presentation mat_formattedtext")
+    applyPromptOverride(
+      setId,
+      sourceTitle,
+      textOrHtml(item, "presentation mat_formattedtext")
+    )
   );
   const incorrectFeedback = textOrHtml(
     item,
@@ -561,34 +652,45 @@ function parseQuestion(item, solutionLookup, setId) {
   if (subtaskMatch && solutionText) {
     solutionText = extractSubtaskSolution(solutionText, subtaskMatch[1]);
   }
-  const explicitSolution = getSolutionOverride(setId, title);
+  const explicitSolution = getSolutionOverride(setId, legacyTitle);
   if (explicitSolution) {
     solutionText = explicitSolution;
   }
-  if (normalizeQuestionKey(title) === "Aufgabe 6" && solutionText) {
+  if (normalizeQuestionKey(legacyTitle) === "Aufgabe 6" && solutionText) {
     solutionText = solutionText.replace(/\\bar\{?C\}?_0/g, "C_0");
   }
 
   return {
     title,
+    sourceSetId: setId,
     prompt,
     incorrectFeedback,
     min,
     max,
     exact,
     solutionText,
-    forceSolutionOnly: setId === "set3" && /^Aufgabe 5[a-d]$/i.test(title),
+    forceSolutionOnly: setId === "set3" && /^Aufgabe 5[a-d]$/i.test(legacyTitle),
   };
 }
 
-function parseExerciseXml(xmlText, solutionLookup, setId) {
+function parseExerciseXml(xmlText, solutionLookup, setId, itemMapping = null) {
   const parser = new DOMParser();
   const xml = parser.parseFromString(xmlText, "application/xml");
   const title = xml.querySelector("assessment")?.getAttribute("title") || "Aufgabenset";
   const intro = textOrHtml(xml, "presentation_material mat_formattedtext");
-  const items = [...xml.querySelectorAll("section > item")]
-    .map((item) => parseQuestion(item, solutionLookup, setId))
-    .filter(Boolean);
+  const sourceItems = [...xml.querySelectorAll("section > item")];
+  const items = itemMapping
+    ? itemMapping
+        .map((mapping) => {
+          const item = sourceItems.find(
+            (candidate) => candidate.getAttribute("title") === mapping.sourceTitle
+          );
+          return item
+            ? parseQuestion(item, solutionLookup, setId, mapping.title)
+            : null;
+        })
+        .filter(Boolean)
+    : sourceItems.map((item) => parseQuestion(item, solutionLookup, setId)).filter(Boolean);
 
   return { title, intro, items };
 }
@@ -928,17 +1030,42 @@ async function loadExerciseSet(meta, button) {
   });
 
   try {
-    const [response, solutionData] = await Promise.all([
-      fetch(`${meta.file}?v=${assetVersion}`),
+    const sourceSetIds = [...new Set(meta.items.map((item) => item.sourceSetId))];
+    const [responses, solutionData] = await Promise.all([
+      Promise.all(
+        sourceSetIds.map(async (sourceSetId) => {
+          const response = await fetch(
+            `${exerciseSourceFiles[sourceSetId]}?v=${assetVersion}`
+          );
+          if (!response.ok) {
+            throw new Error("fetch failed");
+          }
+          return [sourceSetId, await response.text()];
+        })
+      ),
       solutionDataPromise,
     ]);
-    if (!response.ok) {
-      throw new Error("fetch failed");
-    }
-
-    const xmlText = await response.text();
-    const solutionLookup = solutionData[meta.id] || {};
-    const data = parseExerciseXml(xmlText, solutionLookup, meta.id);
+    const xmlBySourceSet = Object.fromEntries(responses);
+    const items = sourceSetIds.flatMap((sourceSetId) => {
+      const itemMapping = meta.items.filter(
+        (item) => item.sourceSetId === sourceSetId
+      );
+      return parseExerciseXml(
+        xmlBySourceSet[sourceSetId],
+        solutionData[sourceSetId] || {},
+        sourceSetId,
+        itemMapping
+      ).items;
+    });
+    const itemOrder = new Map(
+      meta.items.map((item, index) => [`${item.sourceSetId}:${item.title}`, index])
+    );
+    items.sort(
+      (left, right) =>
+        itemOrder.get(`${left.sourceSetId}:${left.title}`) -
+        itemOrder.get(`${right.sourceSetId}:${right.title}`)
+    );
+    const data = { title: meta.title, intro: "", items };
     renderExerciseSet(meta, data);
   } catch (error) {
     panel.innerHTML = `
