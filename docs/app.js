@@ -1,4 +1,4 @@
-const assetVersion = "20260714-1";
+const assetVersion = "20260717-1";
 
 const exerciseSourceFiles = {
   set1: "./qti/set1.xml",
@@ -250,6 +250,15 @@ const promptOverrides = {
 };
 
 const internalReferenceReplacements = {
+  "set2:Aufgabe 3": [
+    ["für Aufgabe 2", "für Aufgabe 24"],
+  ],
+  "set2:Aufgabe 7": [
+    [
+      "Projekte A und B aus der letzten Aufgabe",
+      "Projekte A und B aus Aufgabe 1 des Aufgabensets Investitionsrechnung unter Sicherheit",
+    ],
+  ],
   "set3:Aufgabe 5a": [
     ["Teilaufgaben 5a bis 5d", "Teilaufgaben 1a bis 1d"],
   ],
@@ -283,7 +292,7 @@ const internalReferenceReplacements = {
   "set4-extra:Aufgabe 4": [
     [
       "aus Set 3, Aufgabe 4",
-      "aus dem Aufgabenset Investitionsrechnung unter Sicherheit, Aufgabe 4",
+      "aus dem Aufgabenset Investitionsrechnung unter Sicherheit, Aufgabe 6",
     ],
   ],
 };
