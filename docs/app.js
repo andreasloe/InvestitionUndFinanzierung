@@ -1,4 +1,4 @@
-const assetVersion = "20260717-1";
+const assetVersion = "20260718-1";
 
 const exerciseSourceFiles = {
   set1: "./qti/set1.xml",
@@ -174,7 +174,7 @@ const solutionOverrides = {
     "Aufgabe 10":
       "R_0=100.000\\cdot\\frac{1,08^{30}-1}{0,08\\cdot 1,08^{30}}=1.125.778,3",
     "Aufgabe 11":
-      "Der Zinssatz ist 13,7698\\%.\n\nDie Funktion $f(i)$ ist durch die Bedingung gekennzeichnet, dass der Endwert gleich 16.450 ist. Dann gilt\n\n$f(i)=2.500+2.500(1+i)+2.500\\cdot(1+i)^2+2.500\\cdot(1+i)^3+2.500\\cdot(1+i)^4-16.450$\n\nwobei wir als nächsten Zinssatz immer denjenigen nehmen, der neben dem letzten Zinssatz ein anderes Vorzeichen besitzt:\n\nk | $i_k$ | $f(i)$\n0 | 10\\% | -1187,25000\n1 | 15\\% | 405,95310\n2 | 13,7259844\\% | -14,28474205\n3 | 13,7692908\\% | -0,163159932\n4 | 13,7697852\\% | -0,001862482",
+      "Der Zinssatz ist 13,7698\\%.\n\nDie Funktion $f(i)$ ist durch die Bedingung gekennzeichnet, dass der Endwert gleich 16.450 ist. Dann gilt\n\n$f(i)=2.500+2.500(1+i)+2.500\\cdot(1+i)^2+2.500\\cdot(1+i)^3+2.500\\cdot(1+i)^4-16.450$\n\nBeginnt man – wie in der Aufgabenstellung empfohlen – mit den Startwerten $1\\%$ und $20\\%$, erhält man schrittweise:\n\nk | $i_k$ | $f(i)$\n0 | 20\\% | 2154,00000\n1 | 1\\% | -3697,48748\n2 | 13,005881\\% | -247,43231\n3 | 13,726522\\% | -14,10947\n4 | 13,767348\\% | -0,79685\n5 | 13,769653\\% | -0,04498\n6 | 13,769783\\% | -0,00254",
   },
   "set2-extra": {
     "Aufgabe 1":
@@ -192,11 +192,11 @@ const solutionOverrides = {
     "Aufgabe 5a":
       "L=C_0^{\\frac{3}{5}} \\cdot C_1^{\\frac{2}{5}}- \\lambda \\bigl(C_1-(1+i)\\cdot(\\bar{C}_0-C_0)\\bigr).",
     "Aufgabe 5b":
-      "\\frac{\\partial L}{\\partial \\lambda}=C_1-(1+i)\\cdot(\\bar{C}_0-C_0)=0.",
+      "\\frac{\\partial L}{\\partial C_0}=\\frac{3}{5}C_0^{-\\frac{2}{5}}\\cdot C_1^{\\frac{2}{5}}-\\lambda\\cdot(1+i)=0.\n\n\\frac{\\partial L}{\\partial C_1}=\\frac{2}{5}C_0^{\\frac{3}{5}}\\cdot C_1^{-\\frac{3}{5}}-\\lambda=0.\n\n\\frac{\\partial L}{\\partial \\lambda}=C_1-(1+i)\\cdot(\\bar{C}_0-C_0)=0.",
     "Aufgabe 5c":
       "-(1+i)=-\\frac{\\frac{3}{5}C_0^{\\frac{-2}{5}}\\cdot C_1^{\\frac{2}{5}}}{\\frac{2}{5}C_0^{\\frac{3}{5}}\\cdot C_1^{\\frac{-3}{5}}}=-\\frac{3}{2}\\frac{C_1}{C_0}.",
     "Aufgabe 5d": "\\bar{C}_0=\\frac{C_1}{1+i}+C_0",
-    "Aufgabe 6a": "(1+i) \\cdot C_0 = 250.\nPunkt A auf der Grafik.",
+    "Aufgabe 6a": "(1+i) \\cdot \\bar{C}_0 = 250.\nPunkt A auf der Grafik.",
     "Aufgabe 6b": "$C_0=166,67$\nPunkt D auf der Grafik.",
   },
   set4: {
@@ -213,7 +213,7 @@ const solutionOverrides = {
     "Aufgabe 3":
       "Es gilt\n\n$f(i)= -1500 +\\frac{800}{(1+i)^1}+\\frac{600}{(1+i)^2}+\\frac{100}{(1+i)^3}+\\frac{200}{(1+i)^4}$\n\nMit einem Näherungsverfahren erhält man die Lösung, siehe Abbildung [4.3].\n\nSchritt | Zinssatz | NPV\n0 | 0,000000\\% | 200\n1 | 10\\% | -65,12533\n2 | 7,5436\\% | -7,421405\n3 | 7,2737\\% | -0,81722\n4 | 7,2441\\% | -0,0896363\n5 | 7,2409\\% | -0,010939\n6 | 7,2405\\% | -0,0011",
     "Aufgabe 4":
-      "Bei der Berechnung des internen Zinses werden nur Zahlungen, die direkt mit der Investition zusammenhängen, berücksichtigt. Das heißt Basiszahlungen sowie Entnahmen werden hier nicht in Betracht gezogen. Die von den Investitionsprojekten A und B (und auch von der Unterlassung, trivialerweise gleich Null) generierten Zahlungen sind in der folgenden Tabelle gegeben:\n\nZeitpunkte | $t=0$ | $t=1$ | $t=2$ | $t=3$ | $t=4$\nProjekt A Cashflows | $CF_t$ | -3.000 | 1.000 | 1.100 | 800 | 700\nProjekt B Cashflows | $CF_t$ | -4.000 | 2.000 | -800 | 1.500 | 2.100\nUnterlassung Cashflows | $CF_t$ | 0 | 0 | 0 | 0 | 0\n\n$\\text{NPV}=f(i)= -3000 +\\frac{1000}{(1+i)^1}+\\frac{1100}{(1+i)^2}+\\frac{800}{(1+i)^3}+\\frac{700}{(1+i)^4}=0$\n\nMithilfe eines Näherungsverfahrens bekommt man den internen Zinssatz der Investition A von $8,30\\%$.\n\nk | $i_k$ | $f(i_k)=\\text{NPV}$\n0 | 0 | 600\n1 | 0,1 | -102,65692\n2 | 0,085390 | -14,914748\n3 | 0,083319 | -2,11691\n4 | 0,083026 | -0,2988986\n5 | 0,082985 | -0,044353\n6 | 0,082997 | -0,11886\n\nAnalog beträgt der interne Zinssatz der Investition B $6,96\\%$:\n\nk | $i_k$ | $f(i_k)=\\text{NPV}$\n0 | 0 | 800\n1 | 0,1 | -281,67475\n2 | 0,073959 | -41,798008\n3 | 0,070287 | -5,8943356\n4 | 0,69773 | -0,8254203\n5 | 0,69701 | -0,1145245\n6 | 0,069691 | -0,0157724\n\nDie Unterlassungsalternative hat einen internen Zinssatz von Null.",
+      "Bei der Berechnung des internen Zinses werden nur Zahlungen, die direkt mit der Investition zusammenhängen, berücksichtigt. Das heißt Basiszahlungen sowie Entnahmen werden hier nicht in Betracht gezogen. Die von den Investitionsprojekten A und B (und auch von der Unterlassung, trivialerweise gleich Null) generierten Zahlungen sind in der folgenden Tabelle gegeben:\n\nZeitpunkte | $t=0$ | $t=1$ | $t=2$ | $t=3$ | $t=4$\nProjekt A Cashflows | $CF_t$ | -3.000 | 1.000 | 1.100 | 800 | 700\nProjekt B Cashflows | $CF_t$ | -4.000 | 2.000 | -800 | 1.500 | 2.100\nUnterlassung Cashflows | $CF_t$ | 0 | 0 | 0 | 0 | 0\n\n$\\text{NPV}=f(i)= -3000 +\\frac{1000}{(1+i)^1}+\\frac{1100}{(1+i)^2}+\\frac{800}{(1+i)^3}+\\frac{700}{(1+i)^4}=0$\n\nMithilfe eines Näherungsverfahrens bekommt man den internen Zinssatz der Investition A von $8,30\\%$.\n\nk | $i_k$ | $f(i_k)=\\text{NPV}$\n0 | 0 | 600\n1 | 0,1 | -102,65692\n2 | 0,085390 | -14,914748\n3 | 0,083319 | -2,11691\n4 | 0,083026 | -0,2988986\n5 | 0,082985 | -0,044353\n6 | 0,082978 | -0,0008905\n\nAnalog beträgt der interne Zinssatz der Investition B $6,97\\%$:\n\nk | $i_k$ | $f(i_k)=\\text{NPV}$\n0 | 0 | 800\n1 | 0,1 | -281,67475\n2 | 0,073959 | -41,798008\n3 | 0,070287 | -5,8943356\n4 | 0,069773 | -0,8254203\n5 | 0,069701 | -0,1145245\n6 | 0,069691 | -0,0157724\n\nDie Unterlassungsalternative hat einen internen Zinssatz von Null.",
   },
   "set4-extra": {
     "Aufgabe 1a":
@@ -226,10 +226,6 @@ const solutionOverrides = {
       "$125,371=\\frac{0,3\\cdot 250+0,7\\cdot 100}{1+k}\\quad\\Longrightarrow\\quad k=15,657\\%$",
     "Aufgabe 2c":
       "$125,371=\\frac{q(\\text{auf})\\cdot 250+(1-q(\\text{auf}))\\cdot 100}{1+10\\%}\\quad\\Longrightarrow\\quad q(\\text{auf})=25,272\\%$",
-    "Aufgabe 3":
-      "$NPV=f(i)=-I_0+\\sum_{t=1}^4\\frac{CF_t}{(1+i)^t}$\n\n$=-1.000+\\frac{600}{1+i}+\\frac{600}{(1+i)^2}+\\frac{0}{(1+i)^3}+\\frac{100}{(1+i)^4}$",
-    "Aufgabe 4":
-      "$\\text{NPV}=-I_0+\\sum_{t=1}^T \\frac{CF_t}{(1+i)^t}=0$\n\n$\\text{NPV}=f(i)= -6000 +\\frac{100}{(1+i)^1}+\\frac{200}{(1+i)^2}+\\frac{6.000}{(1+i)^3}+\\frac{2.800}{(1+i)^4}=0$",
   },
 };
 
@@ -665,10 +661,6 @@ function parseQuestion(item, solutionLookup, setId, displayTitle = "") {
   if (explicitSolution) {
     solutionText = explicitSolution;
   }
-  if (normalizeQuestionKey(legacyTitle) === "Aufgabe 6" && solutionText) {
-    solutionText = solutionText.replace(/\\bar\{?C\}?_0/g, "C_0");
-  }
-
   return {
     title,
     sourceSetId: setId,
