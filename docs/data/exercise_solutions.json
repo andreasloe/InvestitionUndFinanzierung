@@ -10,7 +10,7 @@
     "Aufgabe 8": "R_0=700\\cdot \\frac(1+0,05)^10-10,05\\cdot (1+0,05)^10=5.405,21",
     "Aufgabe 9": "R_0=1.000 \\frac(1+0,04)^25-10,04\\cdot (1+0,04)^25=15.622,08",
     "Aufgabe 10": "R_0=55.000\\cdot\\frac1,06^20-10,06\\cdot 1,06^20=630.845,67",
-    "Aufgabe 11": "Wir starten mit $i=1\\%$ und $i=10\\%$. Die Vorzeichen von $f(i)=R_n(i)-27.712,91$ sind unterschiedlich. Es ergeben sich schrittweise folgende Werte\n\nk (Schritt) | $i_k$ | $f(i_k)$\n1 | 1\\% | -4513,03242\n2 | 10\\% | 4307,57668\n3 | 5,604817\\% | -390,06119\n4 | 5,969764\\% | -30,05835\n5 | 5,997693\\% | -2,29500\n6 | 5,999824\\% | -0,17510\n7 | 5,999986\\% | 0,01336"
+    "Aufgabe 11": "Wir starten mit $i=1\\%$ und $i=10\\%$. Die Vorzeichen von $f(i)=R_n(i)-27.712,91$ sind unterschiedlich. Es ergeben sich schrittweise folgende Werte\n\nk (Schritt) | $i_k$ | $f(i_k)$\n0 | 1\\% | -4513,03242\n1 | 10\\% | 4307,57668\n2 | 5,604817\\% | -390,06119\n3 | 5,969764\\% | -30,05835\n4 | 5,997693\\% | -2,29500\n5 | 5,999824\\% | -0,17510\n6 | 5,999986\\% | 0,01336"
   },
   "set2": {
     "Aufgabe 1": "$R_0=\\frac1.8000,08=22.500$",
